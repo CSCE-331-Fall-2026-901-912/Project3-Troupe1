@@ -8,6 +8,8 @@
   <link rel="stylesheet" href="manager.css" />
   <script src="js/manager.js" defer></script>
   <script src="js/home.js" defer></script>
+  <script src="js/trend.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js" defer></script>
 </head>
 
 <body>
@@ -41,28 +43,43 @@
 
     <section class="page" id="trend">
       <h1>Sales Trend Analysis</h1>
-      <article class="panel">
-        <h2>Daily Report</h2>
-        <label>Date <input type="date" id="dailyDate"></label>
-        <button class="action report-button" data-report="Daily Report">Generate Report</button>
-      </article>
-      <article class="panel">
-        <h2>Sales Report</h2>
-        <div class="fields">
-          <label>Start Date <input type="date" id="salesStart"></label>
-          <label>End Date <input type="date" id="salesEnd"></label>
-        </div>
-        <button class="action report-button" data-report="Sales Report">Generate Report</button>
-      </article>
-      <article class="panel">
-        <h2>Product Usage Report</h2>
-        <div class="fields">
-          <label>Start Date <input type="date" id="usageStart"></label>
-          <label>End Date <input type="date" id="usageEnd"></label>
-        </div>
-        <button class="action report-button" data-report="Product Usage Report">Generate Report</button>
-      </article>
-      <div class="report-output" id="trendOutput" role="status"> Select a report to preview.</div>
+      <div class="trend-nav">
+        <button class="trend-tab active" data-trend="daily">Daily Report</button>
+        <button class="trend-tab" data-trend="sales">Sales Report</button>
+        <button class="trend-tab" data-trend="usage">Product Usage Report</button>
+      </div>
+      <div class="trend-page active" id="daily">
+        <article class="panel">
+            <h2>Daily Report</h2>
+            <label>Date<input type="date" id="dailyDate"></label>
+            <button class="action report-button" data-report="Daily Report">Generate Report</button>
+        </article>
+      </div>
+      <div class="trend-page" id="sales">
+        <article class="panel">
+            <h2>Sales Report</h2>
+            <div class="fields">
+              <label>Start Date<input type="date" id="salesStart"></label>
+              <label>End Date<input type="date" id="salesEnd"></label>
+            </div>
+            <button class="action report-button" data-report="Sales Report">Generate Report</button>
+        </article>
+      </div>
+      <div class="trend-page" id="usage">
+        <article class="panel">
+          <h2>Product Usage Report</h2>
+            <div class="fields">
+              <label>Start Date<input type="date" id="usageStart"></label>
+              <label>End Date<input type="date" id="usageEnd"></label>
+            </div>
+            <button class="action report-button" data-report="Product Usage Report">Generate Report</button>
+        </article>
+      </div>
+      <div class="report-output" id="trendOutput" role="status">Select a report to preview.</div>
+      <div class="panel" id="trendChartPanel" hidden>
+        <h2>Report Chart</h2>
+        <canvas id="trendChart"></canvas>
+      </div>
     </section>
 
     <section class="page" id="menu">

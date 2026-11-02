@@ -16,4 +16,21 @@ document.addEventListener("DOMContentLoaded", () => {
             tab.classList.add("active");
         });
     });
+
+    const trendTabs = document.querySelectorAll(".trend-tab");
+    const trendPages = document.querySelectorAll(".trend-page");
+    trendTabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+            const selected = tab.dataset.trend;
+            trendTabs.forEach((button) => {
+                button.classList.remove("active");
+            });
+
+            trendPages.forEach((page) => {
+                page.classList.remove("active");
+            });
+            tab.classList.add("active");
+            document.getElementById(selected).classList.add("active");
+        });
+    });
 });
