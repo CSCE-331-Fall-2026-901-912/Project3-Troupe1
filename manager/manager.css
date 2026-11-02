@@ -47,6 +47,25 @@ body {
     flex-wrap: wrap;
 }
 
+.back-button {
+    padding: 12px 18px;
+    margin-left: auto;
+
+    background: transparent;
+    border: 1px solid var(--green);
+    border-radius: 6px;
+
+    color: var(--green);
+    font-size: 15px;
+    cursor: pointer;
+
+    white-space: nowrap;
+}
+
+.back-button:hover {
+    background: var(--mint);
+}
+
 .tab {
     padding: 12px 18px;
     border: 0;

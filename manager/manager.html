@@ -6,11 +6,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Jade Turtle | Manager Dashboard</title>
   <link rel="stylesheet" href="manager.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js" defer></script>
   <script src="js/manager.js" defer></script>
   <script src="js/home.js" defer></script>
   <script src="js/trend.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js" defer></script>
   <script src="js/menu.js" defer></script>
+  <script src="js/inventory.js" defer></script>
+  <script src="js/employee.js" defer></script>
 </head>
 
 <body>
@@ -23,7 +25,7 @@
       <button class="tab" data-tab="inventory">Inventory</button>
       <button class="tab" data-tab="employee">Employee</button>
     </nav>
-    <span class="header-label">Manager Screen</span>
+    <button class="back-button" id="backToHub">← Back to Hub</button>
   </header>
 
   <main>
