@@ -8,8 +8,66 @@
     <link rel="stylesheet" href="cashier.css">
 </head>
 <body>
-    <h1>Jade Turtle Cashier</h1>
-    <p>Cashier interface coming soon!</p>
+
+    <header class="header">
+        <div class="brand">
+            JADE TURTLE
+            <small>Cashier</small>
+        </div>
+
+        <span class="header-label">Cashier Screen</span>
+
+        <a href="../hub/hub.html" class="hub-button">Back to Hub</a>
+    </header>
+
+    <main>
+        <h1>Cashier</h1>
+
+        <!-- Popular Drinks -->
+        <section class="panel">
+            <h2>Popular Drinks</h2>
+            <div class="popular-drinks">
+                <button class="drink-button">Classic Milk Tea</button>
+                <button class="drink-button">Taro Milk Tea</button>
+                <button class="drink-button">Mango Fruit Tea</button>
+            </div>
+        </section>
+
+        <div class="cashier-layout">
+
+            <!-- Drink Menu -->
+            <section class="panel menu-section">
+                <h2 id="menuTitle">Select a Category</h2>
+
+                <div class="category-grid" id="menuGrid">
+                    <button class="category-button" data-category="Milk Tea">Milk Tea</button>
+                    <button class="category-button" data-category="Fruit Tea">Fruit Tea</button>
+                    <button class="category-button" data-category="Coffee">Coffee</button>
+                    <button class="category-button" data-category="Smoothie">Smoothie</button>
+                    <button class="category-button" data-category="Seasonal Drink">Seasonal</button>
+                </div>
+            </section>
+
+            <!-- Current Order -->
+            <section class="panel order-section">
+                <h2>Current Order</h2>
+
+                <div class="order-list" id="orderList">
+                    <p class="empty-order">No items in order yet.</p>
+                </div>
+
+                <div class="order-bottom">
+                    <div class="total-row">
+                        <strong>Total:</strong>
+                        <strong id="orderTotal">$0.00</strong>
+                    </div>
+
+                    <button class="checkout-button" id="checkoutButton" disabled>Checkout</button>
+                </div>
+            </section>
+
+        </div>
+    </main>
 
     <script src="cashier.js"></script>
 </body>
