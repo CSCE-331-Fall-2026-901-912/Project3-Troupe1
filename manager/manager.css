@@ -135,6 +135,41 @@ h2 {
     white-space: pre-line;
 }
 
+.trend-nav {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+}
+
+.trend-tab {
+    padding: 12px 20px;
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    color: var(--green);
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.trend-tab:hover {
+    background: var(--light);
+}
+
+.trend-tab.active {
+    border-bottom-color: var(--green);
+    font-weight: bold;
+    background: var(--mint);
+}
+
+.trend-page {
+    display: none;
+}
+
+.trend-page.active {
+    display: block;
+}
+
 .fields {
     display: flex;
     gap: 20px;
