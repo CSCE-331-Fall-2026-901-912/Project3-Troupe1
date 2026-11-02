@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Jade Turtle | Manager Dashboard</title>
+  <link rel="stylesheet" href="manager.css" />
+  <script src="manager.js" defer></script>
+</head>
+
+<body>
+  <header class="header">
+    <div class="brand">JADE TURTLE <small>Manager</small></div>
+    <nav aria-label="Manager navigation">
+      <button class="tab active" data-tab="home">Home</button>
+      <button class="tab" data-tab="trend">Trend</button>
+      <button class="tab" data-tab="menu">Menu</button>
+      <button class="tab" data-tab="inventory">Inventory</button>
+      <button class="tab" data-tab="employee">Employee</button>
+    </nav>
+    <span class="header-label">Manager Screen</span>
+  </header>
+
+  <main>
+    <section class="page active" id="home">
+      <h1>Manager Home</h1>
+      <div class="two-columns">
+        <article class="panel">
+          <h2>Today's Sales by Category</h2>
+          <div class="chart-wrap"><div class="pie" role="img" aria-label="Illustrative sales by category pie chart"></div><div class="legend"><span><b class="dot d1"></b>Milk Tea</span><span><b class="dot d2"></b>Fruit Tea</span><span><b class="dot d3"></b>Specialty</span></div></div>
+          <p class="note">Sample chart for preliminary design.</p>
+        </article>
+        <article class="panel">
+          <h2>X-Report</h2>
+          <p>View the current day's sales summary.</p>
+          <button class="action" id="xReport">Generate X-Report</button>
+          <div class="report-output" id="xOutput">Select Generate X-Report to preview the report.</div>
+        </article>
+      </div>
+    </section>
+
+
+
+  </main>
+</body>
+
+</html>
