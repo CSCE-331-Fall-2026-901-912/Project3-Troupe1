@@ -37,7 +37,10 @@
 
             <!-- Drink Menu -->
             <section class="panel menu-section">
-                <h2 id="menuTitle">Select a Category</h2>
+                <div class="menu-heading">
+                    <h2 id="menuTitle">Select a Category</h2>
+                    <button id="backButton" class="back-button">Back</button>
+                </div>
 
                 <div class="category-grid" id="menuGrid">
                     <button class="category-button" data-category="Milk Tea">Milk Tea</button>
@@ -46,6 +49,8 @@
                     <button class="category-button" data-category="Smoothie">Smoothie</button>
                     <button class="category-button" data-category="Seasonal Drink">Seasonal</button>
                 </div>
+
+                <div class="drink-grid" id="drinkGrid"></div>
             </section>
 
             <!-- Current Order -->
