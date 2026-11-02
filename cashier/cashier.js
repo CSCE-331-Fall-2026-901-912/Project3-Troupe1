@@ -32,26 +32,55 @@ const menuGrid = document.getElementById("menuGrid");
 const drinkGrid = document.getElementById("drinkGrid");
 const menuTitle = document.getElementById("menuTitle");
 const backButton = document.getElementById("backButton");
+const customization = document.getElementById("customization");
+const addonList = document.getElementById("addonList");
+const orderList = document.getElementById("orderList");
 
-// Set up category buttons
+const addOns = [
+    { id: 1, name: "Tapioca Pearls", price: 0.75 },
+    { id: 2, name: "Mango Popping Boba", price: 0.75 },
+    { id: 3, name: "Strawberry Popping Boba", price: 0.75 },
+    { id: 4, name: "Lychee Jelly", price: 0.65 },
+    { id: 5, name: "Grass Jelly", price: 0.65 },
+    { id: 6, name: "Aloe Vera", price: 0.75 },
+    { id: 7, name: "Pudding", price: 0.65 },
+    { id: 8, name: "Red Bean", price: 0.75 }
+];
+
+let currentCategory = "";
+let selectedDrink = null;
+let currentOrder = [];
+
+// Category buttons
 document.querySelectorAll(".category-button").forEach(button => {
+    button.addEventListener("click", () => showCategory(button.dataset.category));
+});
+
+// Popular drink buttons
+document.querySelectorAll(".popular-drinks .drink-button").forEach(button => {
     button.addEventListener("click", () => {
-        showCategory(button.dataset.category);
+        const item = menuItems.find(item => item.id === Number(button.dataset.id));
+
+        if (item) {
+            currentCategory = item.category;
+            showDrinkCustomization(item);
+        }
     });
 });
 
-// Show drinks in the selected category
+// Show drinks from a category
 function showCategory(category) {
+    currentCategory = category;
     menuTitle.textContent = category;
     menuGrid.style.display = "none";
     drinkGrid.style.display = "grid";
+    customization.style.display = "none";
     backButton.style.display = "block";
-
     drinkGrid.innerHTML = "";
 
     menuItems.forEach(item => {
         if (item.category === category) {
-            const drink = document.createElement("div");
+            const drink = document.createElement("button");
             drink.className = "menu-drink";
 
             drink.innerHTML = `
@@ -59,17 +88,138 @@ function showCategory(category) {
                 <span>$${item.price.toFixed(2)}</span>
             `;
 
+            drink.addEventListener("click", () => showDrinkCustomization(item));
             drinkGrid.appendChild(drink);
         }
     });
 }
 
-// Return to category selection
+// Return to the category buttons
 function showCategories() {
     menuTitle.textContent = "Select a Category";
     menuGrid.style.display = "grid";
     drinkGrid.style.display = "none";
+    customization.style.display = "none";
     backButton.style.display = "none";
 }
 
-backButton.addEventListener("click", showCategories);
+// Open drink customization
+function showDrinkCustomization(item) {
+    selectedDrink = item;
+    menuTitle.textContent = "Customize Drink";
+    document.getElementById("drinkName").textContent = item.name;
+    document.getElementById("basePrice").textContent = "Base Price: $" + item.price.toFixed(2);
+
+    menuGrid.style.display = "none";
+    drinkGrid.style.display = "none";
+    customization.style.display = "block";
+    backButton.style.display = "block";
+    addonList.innerHTML = "";
+
+    let availableAddOns = addOns;
+
+    // Match the available add-ons from Project 2
+    if (item.id >= 25) {
+        availableAddOns = [];
+    } else if (item.id === 20) {
+        availableAddOns = addOns.filter(addOn => addOn.name !== "Grass Jelly");
+    }
+
+    if (availableAddOns.length === 0) {
+        addonList.innerHTML = "<p>No optional add-ons for this drink.</p>";
+    }
+
+    availableAddOns.forEach(addOn => {
+        const label = document.createElement("label");
+        label.className = "addon-option";
+
+        label.innerHTML = `
+            <input type="checkbox" value="${addOn.id}">
+            <span>${addOn.name}</span>
+            <span>+$${addOn.price.toFixed(2)}</span>
+        `;
+
+        addonList.appendChild(label);
+    });
+
+    addonList.querySelectorAll("input").forEach(input => {
+        input.addEventListener("change", updateCustomTotal);
+    });
+
+    updateCustomTotal();
+}
+
+// Get the selected add-ons
+function getSelectedAddOns() {
+    return Array.from(addonList.querySelectorAll("input:checked")).map(input => {
+        return addOns.find(addOn => addOn.id === Number(input.value));
+    });
+}
+
+// Update the customization price
+function updateCustomTotal() {
+    let total = selectedDrink.price;
+
+    getSelectedAddOns().forEach(addOn => {
+        total += addOn.price;
+    });
+
+    document.getElementById("customTotal").textContent = "Total: $" + total.toFixed(2);
+}
+
+// Add the customized drink to the order
+document.getElementById("addToOrderButton").addEventListener("click", () => {
+    if (!selectedDrink) return;
+
+    const selectedAddOns = getSelectedAddOns();
+    let total = selectedDrink.price;
+
+    selectedAddOns.forEach(addOn => {
+        total += addOn.price;
+    });
+
+    currentOrder.push({
+        name: selectedDrink.name,
+        addOns: selectedAddOns.map(addOn => addOn.name),
+        total: total
+    });
+
+    updateOrder();
+    showCategory(currentCategory);
+});
+
+// Display the current order
+function updateOrder() {
+    orderList.innerHTML = "";
+    let orderTotal = 0;
+
+    currentOrder.forEach(item => {
+        orderTotal += item.total;
+
+        const row = document.createElement("div");
+        row.className = "order-item";
+
+        const addOnText = item.addOns.length ? item.addOns.join(", ") : "No add-ons";
+
+        row.innerHTML = `
+            <div>
+                <strong>${item.name}</strong>
+                <small>${addOnText}</small>
+            </div>
+            <span>$${item.total.toFixed(2)}</span>
+        `;
+
+        orderList.appendChild(row);
+    });
+
+    document.getElementById("orderTotal").textContent = "$" + orderTotal.toFixed(2);
+}
+
+// Back button
+backButton.addEventListener("click", () => {
+    if (customization.style.display === "block") {
+        showCategory(currentCategory);
+    } else {
+        showCategories();
+    }
+});

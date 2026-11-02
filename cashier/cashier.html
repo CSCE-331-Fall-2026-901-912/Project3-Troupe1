@@ -27,9 +27,9 @@
         <section class="panel">
             <h2>Popular Drinks</h2>
             <div class="popular-drinks">
-                <button class="drink-button">Classic Milk Tea</button>
-                <button class="drink-button">Taro Milk Tea</button>
-                <button class="drink-button">Mango Fruit Tea</button>
+                <button class="drink-button" data-id="1">Classic Milk Tea</button>
+                <button class="drink-button" data-id="2">Taro Milk Tea</button>
+                <button class="drink-button" data-id="9">Mango Green Tea</button>
             </div>
         </section>
 
@@ -51,6 +51,20 @@
                 </div>
 
                 <div class="drink-grid" id="drinkGrid"></div>
+
+                <!-- Drink Customization -->
+                <div class="customization" id="customization">
+                    <h3 id="drinkName"></h3>
+                    <p id="basePrice"></p>
+
+                    <h3>Add-Ons</h3>
+                    <div class="addon-list" id="addonList"></div>
+
+                    <div class="customization-bottom">
+                        <strong id="customTotal">Total: $0.00</strong>
+                        <button class="add-order-button" id="addToOrderButton">Add to Order</button>
+                    </div>
+                </div>
             </section>
 
             <!-- Current Order -->

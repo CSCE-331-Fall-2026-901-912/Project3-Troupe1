@@ -14,8 +14,6 @@ body {
     background: #fff;
 }
 
-/* Header */
-
 .header {
     display: flex;
     align-items: center;
@@ -57,8 +55,6 @@ body {
     background: #0c3623;
 }
 
-/* Main Layout */
-
 main {
     max-width: 1400px;
     margin: 30px auto;
@@ -83,8 +79,6 @@ h2 {
     margin-bottom: 20px;
 }
 
-/* Popular Drinks */
-
 .popular-drinks {
     display: flex;
     gap: 15px;
@@ -104,8 +98,6 @@ h2 {
 .drink-button:hover {
     background: #c3e6d9;
 }
-
-/* Cashier Menu and Order */
 
 .cashier-layout {
     display: grid;
@@ -137,8 +129,6 @@ h2 {
 .category-button:hover {
     background: var(--mint);
 }
-
-/* Order Panel */
 
 .order-section {
     display: flex;
@@ -190,8 +180,6 @@ h2 {
     cursor: not-allowed;
 }
 
-/* Drink Selection */
-
 .menu-heading {
     display: flex;
     justify-content: space-between;
@@ -240,4 +228,107 @@ h2 {
 
 .menu-drink span {
     font-size: 14px;
+}
+
+.menu-drink {
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.menu-drink:hover {
+    background: var(--mint);
+}
+
+.customization {
+    display: none;
+}
+
+.customization h3 {
+    color: var(--green);
+    font-size: 19px;
+    margin: 15px 0;
+}
+
+#basePrice {
+    color: #66776e;
+    margin-bottom: 25px;
+}
+
+.addon-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.addon-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--light);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px;
+    cursor: pointer;
+}
+
+.addon-option input {
+    accent-color: var(--green);
+    width: 17px;
+    height: 17px;
+}
+
+.addon-option span:last-child {
+    margin-left: auto;
+    color: var(--green);
+}
+
+.customization-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+}
+
+#customTotal {
+    font-size: 20px;
+    color: var(--green);
+}
+
+.add-order-button {
+    background: var(--green);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 14px 25px;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.add-order-button:hover {
+    background: #0c3623;
+}
+
+.order-item {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.order-item strong {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.order-item small {
+    display: block;
+    color: #66776e;
+    line-height: 1.5;
+}
+
+.order-item span {
+    white-space: nowrap;
 }
