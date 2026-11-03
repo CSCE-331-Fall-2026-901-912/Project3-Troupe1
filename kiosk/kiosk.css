@@ -24,19 +24,12 @@ body {
   height: 100%;
 }
 
-.header {
-  display: flex;
-  align-items: center;
-  padding: 13px 20px;
-  min-height: 74px;
-  background: #fff;
-  border-bottom: 1px solid #dde8e2;
-}
-
 .brand {
+  padding: 16px 12px;
   font-size: 19px;
   font-weight: bold;
-  color: #184e36;
+  color: #fff;
+  border-bottom: 1px solid #555;
 }
 
 .brand small {
@@ -203,6 +196,11 @@ button.primary {
 
 button.secondary {
   background: #ccc;
+}
+
+#addonBack {
+  background: red;
+  color: #fff;
 }
 
 button.remove {
