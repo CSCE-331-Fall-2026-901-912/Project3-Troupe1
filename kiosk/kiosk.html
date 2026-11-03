@@ -3,29 +3,57 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kiosk</title>
+  <title>Jade Turtle Kiosk</title>
   <link rel="stylesheet" href="kiosk.css">
 </head>
 <body>
   <div class="kiosk">
-    <nav class="categories">
-      <button class="category active">Milk Tea</button>
-      <button class="category">Fruit Tea</button>
-      <button class="category">Coffee</button>
-      <button class="category">Smoothie</button>
-      <button class="category">Seasonal Drink</button>
-    </nav>
-    <main class="items">
-      <div class="item"></div>
-      <div class="item"></div>
-      <div class="item"></div>
-      <div class="item"></div>
-      <div class="item"></div>
-      <div class="item"></div>
-      <div class="item"></div>
-      <div class="item"></div>
-      <div class="item"></div>
-    </main>
+    <section class="screen" id="menuScreen">
+      <div class="menu-body">
+        <nav class="categories">
+          <div class="brand">
+            JADE TURTLE
+            <small>Kiosk</small>
+          </div>
+          <button class="category" data-category="Milk Tea">Milk Tea</button>
+          <button class="category" data-category="Fruit Tea">Fruit Tea</button>
+          <button class="category" data-category="Coffee">Coffee</button>
+          <button class="category" data-category="Smoothie">Smoothie</button>
+          <button class="category" data-category="Seasonal Drink">Seasonal Drink</button>
+        </nav>
+        <main class="items" id="drinkGrid"></main>
+      </div>
+      <div class="cart-bar">
+        <div>
+          <strong id="cartCount">Cart (0)</strong>
+          <span id="cartBarTotal">$0.00</span>
+        </div>
+        <button class="primary" id="cartLink">View Cart</button>
+      </div>
+    </section>
+
+    <section class="screen page" id="addonScreen">
+      <h1 id="drinkName"></h1>
+      <p id="basePrice"></p>
+      <h2>Add-Ons</h2>
+      <div class="addon-list" id="addonList"></div>
+      <strong class="page-total" id="customTotal"></strong>
+      <div class="actions">
+        <button class="secondary" id="addonBack">Back</button>
+        <button class="primary" id="addToCart">Add to Cart</button>
+      </div>
+    </section>
+
+    <section class="screen page" id="cartScreen">
+      <h1>Your Cart</h1>
+      <div class="cart-list" id="cartList"></div>
+      <strong class="page-total" id="cartTotal"></strong>
+      <div class="actions">
+        <button class="secondary" id="keepShopping">Keep Shopping</button>
+        <button class="primary" id="checkoutButton">Checkout</button>
+      </div>
+    </section>
   </div>
+  <script src="kiosk.js"></script>
 </body>
 </html>
