@@ -188,10 +188,14 @@ document.getElementById("addToOrderButton").addEventListener("click", () => {
     showCategory(currentCategory);
 });
 
-// Display the current order
+
 function updateOrder() {
     orderList.innerHTML = "";
     let orderTotal = 0;
+
+    if (currentOrder.length === 0) {
+        orderList.innerHTML = '<p class="empty-order">No items in order yet.</p>';
+    }
 
     currentOrder.forEach(item => {
         orderTotal += item.total;
@@ -213,7 +217,9 @@ function updateOrder() {
     });
 
     document.getElementById("orderTotal").textContent = "$" + orderTotal.toFixed(2);
+    document.getElementById("checkoutButton").disabled = currentOrder.length === 0;
 }
+
 
 // Back button
 backButton.addEventListener("click", () => {
@@ -222,4 +228,12 @@ backButton.addEventListener("click", () => {
     } else {
         showCategories();
     }
+});
+
+
+// Clear the order when checking out
+document.getElementById("checkoutButton").addEventListener("click", () => {
+    currentOrder = [];
+    updateOrder();
+    showCategories();
 });
