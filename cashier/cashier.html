@@ -1,0 +1,93 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jade Turtle Cashier</title>
+    <link rel="stylesheet" href="cashier.css">
+</head>
+<body>
+
+    <header class="header">
+        <div class="brand">
+            JADE TURTLE
+            <small>Cashier</small>
+        </div>
+
+        <span class="header-label">Cashier Screen</span>
+
+        <a href="../hub/hub.html" class="hub-button">Back to Hub</a>
+    </header>
+
+    <main>
+        <h1>Cashier</h1>
+
+        <!-- Popular Drinks -->
+        <section class="panel">
+            <h2>Popular Drinks</h2>
+            <div class="popular-drinks">
+                <button class="drink-button" data-id="1">Classic Milk Tea</button>
+                <button class="drink-button" data-id="2">Taro Milk Tea</button>
+                <button class="drink-button" data-id="9">Mango Green Tea</button>
+            </div>
+        </section>
+
+        <div class="cashier-layout">
+
+            <!-- Drink Menu -->
+            <section class="panel menu-section">
+                <div class="menu-heading">
+                    <h2 id="menuTitle">Select a Category</h2>
+                    <button id="backButton" class="back-button">Back</button>
+                </div>
+
+                <div class="category-grid" id="menuGrid">
+                    <button class="category-button" data-category="Milk Tea">Milk Tea</button>
+                    <button class="category-button" data-category="Fruit Tea">Fruit Tea</button>
+                    <button class="category-button" data-category="Coffee">Coffee</button>
+                    <button class="category-button" data-category="Smoothie">Smoothie</button>
+                    <button class="category-button" data-category="Seasonal Drink">Seasonal</button>
+                </div>
+
+                <div class="drink-grid" id="drinkGrid"></div>
+
+                <!-- Drink Customization -->
+                <div class="customization" id="customization">
+                    <h3 id="drinkName"></h3>
+                    <p id="basePrice"></p>
+
+                    <h3>Add-Ons</h3>
+                    <div class="addon-list" id="addonList"></div>
+
+                    <div class="customization-bottom">
+                        <strong id="customTotal">Total: $0.00</strong>
+                        <button class="add-order-button" id="addToOrderButton">Add to Order</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Current Order -->
+            <section class="panel order-section">
+                <h2>Current Order</h2>
+
+                <div class="order-list" id="orderList">
+                    <p class="empty-order">No items in order yet.</p>
+                </div>
+
+                <div class="order-bottom">
+                    <div class="total-row">
+                        <strong>Total:</strong>
+                        <strong id="orderTotal">$0.00</strong>
+                    </div>
+
+                    <button class="checkout-button" id="checkoutButton" disabled>Checkout</button>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <script src="cashier.js"></script>
+</body>
+</html>
