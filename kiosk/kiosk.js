@@ -59,11 +59,12 @@ function showScreen(name) {
 }
 
 function cartTotal() {
-  return cart.reduce((sum, item) => sum + item.total, 0);
+  return cart.reduce((sum, item) => sum + item.total * item.qty, 0);
 }
 
 function updateCartBar() {
-  document.getElementById("cartCount").textContent = "Cart (" + cart.length + ")";
+  const count = cart.reduce((sum, item) => sum + item.qty, 0);
+  document.getElementById("cartCount").textContent = "Cart (" + count + ")";
   document.getElementById("cartBarTotal").textContent = "$" + cartTotal().toFixed(2);
 }
 
@@ -148,9 +149,23 @@ function showCart() {
         <strong>${item.name}</strong>
         <small>${item.addOns.length ? item.addOns.join(", ") : "No add-ons"}</small>
       </div>
-      <span>$${item.total.toFixed(2)}</span>
+      <div class="qty">
+        <button class="qty-button minus">-</button>
+        <span>${item.qty}</span>
+        <button class="qty-button plus">+</button>
+      </div>
+      <span>$${(item.total * item.qty).toFixed(2)}</span>
       <button class="remove">Remove</button>
     `;
+    row.querySelector(".minus").addEventListener("click", () => {
+      item.qty--;
+      if (item.qty === 0) cart.splice(index, 1);
+      showCart();
+    });
+    row.querySelector(".plus").addEventListener("click", () => {
+      item.qty++;
+      showCart();
+    });
     row.querySelector(".remove").addEventListener("click", () => {
       cart.splice(index, 1);
       showCart();
@@ -172,6 +187,7 @@ document.getElementById("addToCart").addEventListener("click", () => {
   cart.push({
     name: selectedDrink.name,
     addOns: selected.map(addOn => addOn.name),
+    qty: 1,
     total: selected.reduce((sum, addOn) => sum + addOn.price, selectedDrink.price)
   });
   showCart();
