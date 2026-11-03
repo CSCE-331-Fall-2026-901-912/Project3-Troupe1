@@ -33,4 +33,9 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById(selected).classList.add("active");
         });
     });
+
+    const backButton = document.getElementById("backToHub");
+    backButton.addEventListener("click", () => {
+        window.location.href = "../hub/hub.html";
+    });
 });
