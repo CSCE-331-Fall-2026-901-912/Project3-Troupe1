@@ -51,6 +51,7 @@ button {
   font-family: Georgia, "Times New Roman", serif;
   font-size: 1.3rem;
   font-weight: bold;
+  height: 200px;
   line-height: 1.2;
   color: var(--white);
   background: var(--jade);
@@ -70,6 +71,17 @@ button {
 .brand small {
   display: block;
   margin-top: 5px;
+  white-space: nowrap;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.7rem;
+  font-weight: normal;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #d5e9df;
+}
+.brand large {
+  display: block;
+  margin-top: 20px;
   font-family: Arial, Helvetica, sans-serif;
   font-size: 0.7rem;
   font-weight: normal;
@@ -87,7 +99,7 @@ button {
 .categories {
   display: flex;
   flex-direction: column;
-  width: 25%;
+  width: 26%;
   background: var(--jade-dark);
 }
 
@@ -345,4 +357,14 @@ button.remove:hover {
     padding: 12px;
     font-size: 0.95rem;
   }
+}
+
+.hub-button {
+    background: var(--jade-hover);
+    color: white;
+    white-space: nowrap;
+    font-size: 18px;
+    padding: 10px 6px;
+    border-radius: 5px;
+    text-decoration: none;
 }
