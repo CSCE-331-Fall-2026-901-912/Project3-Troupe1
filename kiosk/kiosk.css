@@ -105,7 +105,7 @@ button {
 
 .category {
   flex: 1;
-  min-height: 56px;
+  min-height: 45px;
   padding: 10px 8px;
   border: none;
   border-bottom: 1px solid rgba(255, 255, 255, 0.14);
@@ -157,6 +157,13 @@ button:focus-visible,
   cursor: pointer;
   touch-action: manipulation;
   transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.item img {
+  width: 100%;
+  min-height: 0;
+  flex: 1;
+  object-fit: contain;
 }
 
 .item:hover {
@@ -232,6 +239,19 @@ button:focus-visible,
 
 .cart-item > div:first-child {
   flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cart-item img {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.cart-text {
   display: flex;
   flex-direction: column;
   gap: 4px;

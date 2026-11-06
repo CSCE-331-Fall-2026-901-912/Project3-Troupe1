@@ -81,7 +81,7 @@ function showCategory(category) {
     .forEach(item => {
       const drink = document.createElement("button");
       drink.className = "item";
-      drink.innerHTML = `<strong>${item.name}</strong><span>$${item.price.toFixed(2)}</span>`;
+      drink.innerHTML = `<img src="../images/${item.id}.png" alt="${item.name}"><strong>${item.name}</strong><span>$${item.price.toFixed(2)}</span>`;
       drink.addEventListener("click", () => showAddOns(item));
       drinkGrid.appendChild(drink);
     });
@@ -146,8 +146,11 @@ function showCart() {
     row.className = "cart-item";
     row.innerHTML = `
       <div>
-        <strong>${item.name}</strong>
-        <small>${item.addOns.length ? item.addOns.join(", ") : "No add-ons"}</small>
+        <img src="../images/${item.id}.png" alt="${item.name}">
+        <div class="cart-text">
+          <strong>${item.name}</strong>
+          <small>${item.addOns.length ? item.addOns.join(", ") : "No add-ons"}</small>
+        </div>
       </div>
       <div class="qty">
         <button class="qty-button minus">-</button>
@@ -185,6 +188,7 @@ categoryButtons.forEach(button => {
 document.getElementById("addToCart").addEventListener("click", () => {
   const selected = getSelectedAddOns();
   cart.push({
+    id: selectedDrink.id,
     name: selectedDrink.name,
     addOns: selected.map(addOn => addOn.name),
     qty: 1,
