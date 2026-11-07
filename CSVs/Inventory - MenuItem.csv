@@ -1,0 +1,25 @@
+MenuItemID,Category,MenuItemName,Ingredient List,Price
+1,Milk Tea,Classic Milk Tea,"Black tea, non-dairy creamer, sugar syrup",$5.25
+2,Milk Tea,Taro Milk Tea,"Black tea, taro powder, milk/creamer",$5.75
+3,Milk Tea,Matcha Milk Tea,"Green tea, matcha powder, milk",$6.00
+4,Milk Tea,Brown Sugar Milk Tea,"Black tea, milk, brown sugar syrup",$6.25
+5,Milk Tea,Thai Milk Tea,"Thai tea, milk, condensed milk",$5.50
+6,Milk Tea,Oolong Milk Tea,"Oolong tea, milk/creamer, sugar syrup",$5.50
+7,Milk Tea,Jasmine Milk Tea,"Jasmine tea, milk/creamer, sugar syrup",$5.50
+8,Milk Tea,Chocolate Milk Tea,"Black tea, chocolate powder, milk",$5.75
+9,Fruit Tea,Mango Green Tea,"Green tea, mango syrup",$5.75
+10,Fruit Tea,Strawberry Green Tea,"Green tea, strawberry syrup",$5.75
+11,Fruit Tea,Passion Fruit Green Tea,"Green tea, passion fruit syrup",$5.75
+12,Fruit Tea,Peach Green Tea,"Green tea, peach syrup",$5.50
+13,Fruit Tea,Lychee Green Tea,"Green tea, lychee syrup",$5.75
+14,Milk Tea,Mango Milk Tea,"Black tea, milk, mango syrup",$6.00
+15,Milk Tea,Strawberry Milk Tea,"Black tea, milk, strawberry syrup",$6.00
+16,Milk Tea,Coconut Milk Tea,"Black tea, coconut milk, sugar syrup",$6.75
+17,Coffee,Brown Sugar Boba Coffee,"Tapioca Pearls, Brown Sugar Syrup, Whole Milk, Espresso, Ice",$6.25
+18,Coffee,Yuanyang Coffee Milk Tea,"Black Tea Leaves, Non-Dairy Creamer, Can Sugar Syrup, Espresso, Grass Jelly, Ice",$5.75
+19,Coffee,Thai Tea Coffee,"Thai Tea Mix, Cane Sugar Syrup, Whole Milk, Tapioca Pearls, Espresso, Ice",$6.25
+20,Coffee,Coconut Mocha With Grass Jelly,"Choclate Powder, Coconut Syrup, Whole Milk, Grass Jelly, Espresso, Ice",$6.50
+21,Smoothie,Mango Passion Fruit Smoothie,"Frozen Mango Chunks, Plain Yogurt, Mango Syrup, Passion Fruit Syrup, Whole Milk, Ice, Mango Popping Boba",$6.50
+22,Smoothie,Strawberry Banana Smoothie,"Frozen Strawberries, Banana, Plain Yogurt, Strawberry Syrup, Whole Milk, Ice, Strawberry Popping Boba",$6.50
+23,Smoothie,Peach Lychee Smoothie,"Plain Yogurt, Banana, Peach Syrup, Lychee Syrup, Ice, Lychee Jelly",$6.25
+24,Smoothie,Taro Coconut Smoothie,"Bananam Taro Powder, Coconut Syrup, Whole Milk, Ice, Tapioca Pearls",$6.50

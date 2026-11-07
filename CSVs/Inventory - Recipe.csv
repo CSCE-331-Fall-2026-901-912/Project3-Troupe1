@@ -1,0 +1,296 @@
+MenuItemID,InventoryID,InventoryItem,AmountUsed,Unit,UsageType
+1,1,Black Tea Leaves,6,g,Base
+1,5,Non-Dairy Creamer,18,g,Base
+1,6,Whole Milk,0.1,L,Base
+1,7,Cane Sugar Syrup,0.02,L,Base
+1,19,Tapioca Pearls,60,g,Optional
+1,20,Mango Popping Boba,45,g,Optional
+1,21,Strawberry Popping Boba,45,g,Optional
+1,22,Lychee Jelly,50,g,Optional
+1,23,Grass Jelly,55,g,Optional
+1,24,Aloe Vera,50,g,Optional
+1,25,Pudding,65,g,Optional
+1,26,Red Bean,55,g,Optional
+2,1,Black Tea Leaves,5,g,Base
+2,5,Non-Dairy Creamer,12,g,Base
+2,6,Whole Milk,0.08,L,Base
+2,7,Cane Sugar Syrup,0.012,L,Base
+2,9,Taro Powder,35,g,Base
+2,19,Tapioca Pearls,60,g,Optional
+2,20,Mango Popping Boba,45,g,Optional
+2,21,Strawberry Popping Boba,45,g,Optional
+2,22,Lychee Jelly,50,g,Optional
+2,23,Grass Jelly,55,g,Optional
+2,24,Aloe Vera,50,g,Optional
+2,25,Pudding,65,g,Optional
+2,26,Red Bean,55,g,Optional
+3,2,Green Tea Leaves,3,g,Base
+3,5,Non-Dairy Creamer,10,g,Base
+3,6,Whole Milk,0.12,L,Base
+3,7,Cane Sugar Syrup,0.015,L,Base
+3,10,Matcha Powder,4,g,Base
+3,19,Tapioca Pearls,60,g,Optional
+3,20,Mango Popping Boba,45,g,Optional
+3,21,Strawberry Popping Boba,45,g,Optional
+3,22,Lychee Jelly,50,g,Optional
+3,23,Grass Jelly,55,g,Optional
+3,24,Aloe Vera,50,g,Optional
+3,25,Pudding,65,g,Optional
+3,26,Red Bean,55,g,Optional
+4,1,Black Tea Leaves,6,g,Base
+4,5,Non-Dairy Creamer,15,g,Base
+4,6,Whole Milk,0.09,L,Base
+4,8,Brown Sugar Syrup,0.035,L,Base
+4,19,Tapioca Pearls,60,g,Optional
+4,20,Mango Popping Boba,45,g,Optional
+4,21,Strawberry Popping Boba,45,g,Optional
+4,22,Lychee Jelly,50,g,Optional
+4,23,Grass Jelly,55,g,Optional
+4,24,Aloe Vera,50,g,Optional
+4,25,Pudding,65,g,Optional
+4,26,Red Bean,55,g,Optional
+5,5,Non-Dairy Creamer,15,g,Base
+5,6,Whole Milk,0.1,L,Base
+5,7,Cane Sugar Syrup,0.015,L,Base
+5,11,Thai Tea Mix,10,g,Base
+5,19,Tapioca Pearls,60,g,Optional
+5,20,Mango Popping Boba,45,g,Optional
+5,21,Strawberry Popping Boba,45,g,Optional
+5,22,Lychee Jelly,50,g,Optional
+5,23,Grass Jelly,55,g,Optional
+5,24,Aloe Vera,50,g,Optional
+5,25,Pudding,65,g,Optional
+5,26,Red Bean,55,g,Optional
+6,3,Oolong Tea Leaves,6,g,Base
+6,5,Non-Dairy Creamer,17,g,Base
+6,6,Whole Milk,0.1,L,Base
+6,7,Cane Sugar Syrup,0.02,L,Base
+6,19,Tapioca Pearls,60,g,Optional
+6,20,Mango Popping Boba,45,g,Optional
+6,21,Strawberry Popping Boba,45,g,Optional
+6,22,Lychee Jelly,50,g,Optional
+6,23,Grass Jelly,55,g,Optional
+6,24,Aloe Vera,50,g,Optional
+6,25,Pudding,65,g,Optional
+6,26,Red Bean,55,g,Optional
+7,4,Jasmine Tea Leaves,6,g,Base
+7,5,Non-Dairy Creamer,16,g,Base
+7,6,Whole Milk,0.1,L,Base
+7,7,Cane Sugar Syrup,0.018,L,Base
+7,19,Tapioca Pearls,60,g,Optional
+7,20,Mango Popping Boba,45,g,Optional
+7,21,Strawberry Popping Boba,45,g,Optional
+7,22,Lychee Jelly,50,g,Optional
+7,23,Grass Jelly,55,g,Optional
+7,24,Aloe Vera,50,g,Optional
+7,25,Pudding,65,g,Optional
+7,26,Red Bean,55,g,Optional
+8,1,Black Tea Leaves,5,g,Base
+8,5,Non-Dairy Creamer,16,g,Base
+8,6,Whole Milk,0.09,L,Base
+8,7,Cane Sugar Syrup,0.015,L,Base
+8,12,Chocolate Powder,20,g,Base
+8,19,Tapioca Pearls,60,g,Optional
+8,20,Mango Popping Boba,45,g,Optional
+8,21,Strawberry Popping Boba,45,g,Optional
+8,22,Lychee Jelly,50,g,Optional
+8,23,Grass Jelly,55,g,Optional
+8,24,Aloe Vera,50,g,Optional
+8,25,Pudding,65,g,Optional
+8,26,Red Bean,55,g,Optional
+9,2,Green Tea Leaves,7,g,Base
+9,7,Cane Sugar Syrup,0.008,L,Base
+9,13,Mango Syrup,0.055,L,Base
+9,19,Tapioca Pearls,60,g,Optional
+9,20,Mango Popping Boba,45,g,Optional
+9,21,Strawberry Popping Boba,45,g,Optional
+9,22,Lychee Jelly,50,g,Optional
+9,23,Grass Jelly,55,g,Optional
+9,24,Aloe Vera,50,g,Optional
+9,25,Pudding,65,g,Optional
+9,26,Red Bean,55,g,Optional
+10,2,Green Tea Leaves,7,g,Base
+10,7,Cane Sugar Syrup,0.008,L,Base
+10,14,Strawberry Syrup,0.055,L,Base
+10,19,Tapioca Pearls,60,g,Optional
+10,20,Mango Popping Boba,45,g,Optional
+10,21,Strawberry Popping Boba,45,g,Optional
+10,22,Lychee Jelly,50,g,Optional
+10,23,Grass Jelly,55,g,Optional
+10,24,Aloe Vera,50,g,Optional
+10,25,Pudding,65,g,Optional
+10,26,Red Bean,55,g,Optional
+11,2,Green Tea Leaves,7,g,Base
+11,7,Cane Sugar Syrup,0.01,L,Base
+11,15,Passion Fruit Syrup,0.05,L,Base
+11,19,Tapioca Pearls,60,g,Optional
+11,20,Mango Popping Boba,45,g,Optional
+11,21,Strawberry Popping Boba,45,g,Optional
+11,22,Lychee Jelly,50,g,Optional
+11,23,Grass Jelly,55,g,Optional
+11,24,Aloe Vera,50,g,Optional
+11,25,Pudding,65,g,Optional
+11,26,Red Bean,55,g,Optional
+12,2,Green Tea Leaves,7,g,Base
+12,7,Cane Sugar Syrup,0.008,L,Base
+12,16,Peach Syrup,0.055,L,Base
+12,19,Tapioca Pearls,60,g,Optional
+12,20,Mango Popping Boba,45,g,Optional
+12,21,Strawberry Popping Boba,45,g,Optional
+12,22,Lychee Jelly,50,g,Optional
+12,23,Grass Jelly,55,g,Optional
+12,24,Aloe Vera,50,g,Optional
+12,25,Pudding,65,g,Optional
+12,26,Red Bean,55,g,Optional
+13,2,Green Tea Leaves,7,g,Base
+13,7,Cane Sugar Syrup,0.008,L,Base
+13,17,Lychee Syrup,0.05,L,Base
+13,19,Tapioca Pearls,60,g,Optional
+13,20,Mango Popping Boba,45,g,Optional
+13,21,Strawberry Popping Boba,45,g,Optional
+13,22,Lychee Jelly,50,g,Optional
+13,23,Grass Jelly,55,g,Optional
+13,24,Aloe Vera,50,g,Optional
+13,25,Pudding,65,g,Optional
+13,26,Red Bean,55,g,Optional
+14,1,Black Tea Leaves,5,g,Base
+14,5,Non-Dairy Creamer,15,g,Base
+14,6,Whole Milk,0.085,L,Base
+14,7,Cane Sugar Syrup,0.008,L,Base
+14,13,Mango Syrup,0.04,L,Base
+14,19,Tapioca Pearls,60,g,Optional
+14,20,Mango Popping Boba,45,g,Optional
+14,21,Strawberry Popping Boba,45,g,Optional
+14,22,Lychee Jelly,50,g,Optional
+14,23,Grass Jelly,55,g,Optional
+14,24,Aloe Vera,50,g,Optional
+14,25,Pudding,65,g,Optional
+14,26,Red Bean,55,g,Optional
+15,1,Black Tea Leaves,5,g,Base
+15,5,Non-Dairy Creamer,15,g,Base
+15,6,Whole Milk,0.085,L,Base
+15,7,Cane Sugar Syrup,0.008,L,Base
+15,14,Strawberry Syrup,0.04,L,Base
+15,19,Tapioca Pearls,60,g,Optional
+15,20,Mango Popping Boba,45,g,Optional
+15,21,Strawberry Popping Boba,45,g,Optional
+15,22,Lychee Jelly,50,g,Optional
+15,23,Grass Jelly,55,g,Optional
+15,24,Aloe Vera,50,g,Optional
+15,25,Pudding,65,g,Optional
+15,26,Red Bean,55,g,Optional
+16,1,Black Tea Leaves,5,g,Base
+16,5,Non-Dairy Creamer,16,g,Base
+16,6,Whole Milk,0.09,L,Base
+16,7,Cane Sugar Syrup,0.01,L,Base
+16,18,Coconut Syrup,0.035,L,Base
+16,19,Tapioca Pearls,60,g,Optional
+16,20,Mango Popping Boba,45,g,Optional
+16,21,Strawberry Popping Boba,45,g,Optional
+16,22,Lychee Jelly,50,g,Optional
+16,23,Grass Jelly,55,g,Optional
+16,24,Aloe Vera,50,g,Optional
+16,25,Pudding,65,g,Optional
+16,26,Red Bean,55,g,Optional
+17,6,Whole Milk,0.2,L,Base
+17,8,Brown Sugar Syrup,0.03,L,Base
+17,34,Espresso,36,g,Base
+17,19,Tapioca Pearls,60,g,Optional
+17,20,Mango Popping Boba,45,g,Optional
+17,21,Strawberry Popping Boba,45,g,Optional
+17,22,Lychee Jelly,50,g,Optional
+17,23,Grass Jelly,55,g,Optional
+17,24,Aloe Vera,50,g,Optional
+17,25,Pudding,65,g,Optional
+17,26,Red Bean,55,g,Optional
+18,1,Black Tea Leaves,5,g,Base
+18,5,Non-Dairy Creamer,18,g,Base
+18,7,Cane Sugar Syrup,0.018,L,Base
+18,34,Espresso,36,g,Base
+18,19,Tapioca Pearls,60,g,Optional
+18,20,Mango Popping Boba,45,g,Optional
+18,21,Strawberry Popping Boba,45,g,Optional
+18,22,Lychee Jelly,50,g,Optional
+18,23,Grass Jelly,55,g,Optional
+18,24,Aloe Vera,50,g,Optional
+18,25,Pudding,65,g,Optional
+18,26,Red Bean,55,g,Optional
+19,6,Whole Milk,0.16,L,Base
+19,7,Cane Sugar Syrup,0.016,L,Base
+19,11,Thai Tea Mix,9,g,Base
+19,34,Espresso,36,g,Base
+19,19,Tapioca Pearls,60,g,Optional
+19,20,Mango Popping Boba,45,g,Optional
+19,21,Strawberry Popping Boba,45,g,Optional
+19,22,Lychee Jelly,50,g,Optional
+19,23,Grass Jelly,55,g,Optional
+19,24,Aloe Vera,50,g,Optional
+19,25,Pudding,65,g,Optional
+19,26,Red Bean,55,g,Optional
+20,6,Whole Milk,0.18,L,Base
+20,12,Chocolate Powder,18,g,Base
+20,18,Coconut Syrup,0.03,L,Base
+20,23,Grass Jelly,55,g,Base
+20,34,Espresso,36,g,Base
+20,19,Tapioca Pearls,60,g,Optional
+20,20,Mango Popping Boba,45,g,Optional
+20,21,Strawberry Popping Boba,45,g,Optional
+20,22,Lychee Jelly,50,g,Optional
+20,24,Aloe Vera,50,g,Optional
+20,25,Pudding,65,g,Optional
+20,26,Red Bean,55,g,Optional
+21,6,Whole Milk,0.09,L,Base
+21,13,Mango Syrup,0.02,L,Base
+21,15,Passion Fruit Syrup,0.015,L,Base
+21,35,Frozen Mango,140,g,Base
+21,38,Plain Yogurt,120,g,Base
+21,19,Tapioca Pearls,60,g,Optional
+21,20,Mango Popping Boba,45,g,Optional
+21,21,Strawberry Popping Boba,45,g,Optional
+21,22,Lychee Jelly,50,g,Optional
+21,23,Grass Jelly,55,g,Optional
+21,24,Aloe Vera,50,g,Optional
+21,25,Pudding,65,g,Optional
+21,26,Red Bean,55,g,Optional
+22,6,Whole Milk,0.09,L,Base
+22,14,Strawberry Syrup,0.02,L,Base
+22,36,Frozen Strawberries,120,g,Base
+22,37,Banana,90,g,Base
+22,38,Plain Yogurt,110,g,Base
+22,19,Tapioca Pearls,60,g,Optional
+22,20,Mango Popping Boba,45,g,Optional
+22,21,Strawberry Popping Boba,45,g,Optional
+22,22,Lychee Jelly,50,g,Optional
+22,23,Grass Jelly,55,g,Optional
+22,24,Aloe Vera,50,g,Optional
+22,25,Pudding,65,g,Optional
+22,26,Red Bean,55,g,Optional
+23,16,Peach Syrup,0.035,L,Base
+23,17,Lychee Syrup,0.025,L,Base
+23,37,Banana,115,g,Base
+23,38,Plain Yogurt,140,g,Base
+23,19,Tapioca Pearls,60,g,Optional
+23,20,Mango Popping Boba,45,g,Optional
+23,21,Strawberry Popping Boba,45,g,Optional
+23,22,Lychee Jelly,50,g,Optional
+23,23,Grass Jelly,55,g,Optional
+23,24,Aloe Vera,50,g,Optional
+23,25,Pudding,65,g,Optional
+23,26,Red Bean,55,g,Optional
+24,6,Whole Milk,0.14,L,Base
+24,9,Taro Powder,35,g,Base
+24,18,Coconut Syrup,0.025,L,Base
+24,37,Banana,100,g,Base
+24,19,Tapioca Pearls,60,g,Optional
+24,20,Mango Popping Boba,45,g,Optional
+24,21,Strawberry Popping Boba,45,g,Optional
+24,22,Lychee Jelly,50,g,Optional
+24,23,Grass Jelly,55,g,Optional
+24,24,Aloe Vera,50,g,Optional
+24,25,Pudding,65,g,Optional
+24,26,Red Bean,55,g,Optional
+25,39,Pumpkin Spice,0.01,L,Base
+25,40,Coffee,0.5,L,Base
+25,6,Whole Milk,0.2,L,Base
+26,41,Pepermint,10,g,Base
+26,6,Whole Milk,0.7,L,Base
