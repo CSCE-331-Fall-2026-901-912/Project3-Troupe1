@@ -70,6 +70,7 @@ function updateCartBar() {
 
 function showCategory(category) {
   currentCategory = category;
+  document.getElementById("categoryHeading").textContent = category;
   drinkGrid.innerHTML = "";
 
   categoryButtons.forEach(button => {
@@ -202,3 +203,123 @@ document.getElementById("keepShopping").addEventListener("click", () => showCate
 document.getElementById("cartLink").addEventListener("click", showCart);
 
 showCategory(currentCategory);
+
+
+// Fixed store location: replace these coordinates if the store moves.
+// This browser-only version makes no customer geolocation request.
+const WEATHER_CONFIG = {
+  latitude: 30.628,
+  longitude: -96.334,
+  cacheMs: 15 * 60 * 1000,
+  timeoutMs: 5000
+};
+const weatherCacheKey = "jade-weather-v1:" +
+  WEATHER_CONFIG.latitude + "," + WEATHER_CONFIG.longitude;
+
+function validWeather(value) {
+  return value && Number.isFinite(value.temperature_2m) &&
+    Number.isFinite(value.apparent_temperature) &&
+    Number.isInteger(value.weather_code);
+}
+
+function weatherDescription(code) {
+  if (code === 0) return "Clear";
+  if ([1, 2, 3].includes(code)) return "Partly cloudy / cloudy";
+  if ([45, 48].includes(code)) return "Foggy";
+  if ([51, 53, 55, 56, 57].includes(code)) return "Drizzle";
+  if ([61, 63, 65, 66, 67, 80, 81, 82].includes(code)) return "Rain";
+  if ([71, 73, 75, 77, 85, 86].includes(code)) return "Snow";
+  if ([95, 96, 99].includes(code)) return "Thunderstorms";
+  return "Current conditions";
+}
+
+function recommendationIds(weather) {
+  if (!weather) return [1, 4, 12];
+  // Temperature takes priority; these are menu suggestions, not hot-drink options.
+  if (weather.apparent_temperature >= 80) return [9, 11, 21];
+  if (weather.apparent_temperature < 60) return [2, 4, 8];
+  if ([51,53,55,56,57,61,63,65,66,67,80,81,82,95,96,99]
+    .includes(weather.weather_code)) return [1, 4, 8];
+  return [1, 3, 12];
+}
+
+function renderWeatherRecommendations(weather) {
+  const status = document.getElementById("weatherStatus");
+  const picks = document.getElementById("weatherPicks");
+  if (weather) {
+    const message = weather.apparent_temperature >= 80
+      ? "Cool off with a fruity favorite."
+      : weather.apparent_temperature < 60
+        ? "Enjoy a rich milk tea today."
+        : "Find your next favorite boba.";
+    status.textContent = "College Station · " +
+      Math.round(weather.temperature_2m) + "°F · Feels like " +
+      Math.round(weather.apparent_temperature) + "°F · " +
+      weatherDescription(weather.weather_code) + ". " + message;
+  } else {
+    status.textContent = "Weather unavailable — try one of these favorites.";
+  }
+  picks.replaceChildren();
+  recommendationIds(weather).forEach(id => {
+    const item = menuItems.find(drink => drink.id === id);
+    if (!item) return;
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "item";
+    const name = document.createElement("strong");
+    name.textContent = item.name;
+    const price = document.createElement("span");
+    price.textContent = "$" + item.price.toFixed(2);
+    button.append(name, price);
+    button.addEventListener("click", () => showAddOns(item));
+    picks.appendChild(button);
+  });
+}
+
+async function initializeWeather() {
+  // Keep picks usable while the request runs.
+  renderWeatherRecommendations(null);
+  document.getElementById("weatherStatus").textContent =
+    "Checking College Station weather…";
+  try {
+    const cached = JSON.parse(localStorage.getItem(weatherCacheKey));
+    const age = cached && Date.now() - cached.savedAt;
+    if (cached && Number.isFinite(age) && age >= 0 &&
+        age < WEATHER_CONFIG.cacheMs && validWeather(cached.current)) {
+      renderWeatherRecommendations(cached.current);
+      return;
+    }
+  } catch {
+    // Blocked storage or invalid cache must not interrupt ordering.
+  }
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), WEATHER_CONFIG.timeoutMs);
+  try {
+    const url = new URL("https://api.open-meteo.com/v1/forecast");
+    url.search = new URLSearchParams({
+      latitude: WEATHER_CONFIG.latitude,
+      longitude: WEATHER_CONFIG.longitude,
+      current: "temperature_2m,apparent_temperature,weather_code",
+      temperature_unit: "fahrenheit",
+      timezone: "America/Chicago"
+    }).toString();
+    const response = await fetch(url, { signal: controller.signal });
+    if (!response.ok) throw new Error("Weather request failed");
+    const data = await response.json();
+    if (!validWeather(data.current)) throw new Error("Invalid weather response");
+    renderWeatherRecommendations(data.current);
+    try {
+      localStorage.setItem(weatherCacheKey,
+        JSON.stringify({ savedAt: Date.now(), current: data.current }));
+    } catch {
+      // Weather still works if browser storage is unavailable.
+    }
+  } catch {
+    renderWeatherRecommendations(null);
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+// Fetch once per page load; keep recommendations stable while a customer orders.
+initializeWeather();
