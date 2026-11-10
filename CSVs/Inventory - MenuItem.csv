@@ -23,3 +23,5 @@ MenuItemID,Category,MenuItemName,Ingredient List,Price
 22,Smoothie,Strawberry Banana Smoothie,"Frozen Strawberries, Banana, Plain Yogurt, Strawberry Syrup, Whole Milk, Ice, Strawberry Popping Boba",$6.50
 23,Smoothie,Peach Lychee Smoothie,"Plain Yogurt, Banana, Peach Syrup, Lychee Syrup, Ice, Lychee Jelly",$6.25
 24,Smoothie,Taro Coconut Smoothie,"Bananam Taro Powder, Coconut Syrup, Whole Milk, Ice, Tapioca Pearls",$6.50
+25,Seasonal,Pumpkin Spice Latte,"Pumpkin Spice, Coffee, Whole Milk",$6.50
+26,Seasonal,Peppermint Shake,"Peppermint, Whole Milk, Ice",$6.00
