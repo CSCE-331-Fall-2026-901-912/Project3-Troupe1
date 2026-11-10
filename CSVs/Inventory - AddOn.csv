@@ -1,0 +1,10 @@
+AddOnsID,IngredientID,Name,Price
+1,19,Tapioca Pearls,0.75
+2,20,Mango Popping Boba,0.75
+3,21,Strawberry Popping Boba,0.75
+4,22,Lychee Jelly,0.65
+5,23,Grass Jelly,0.65
+6,24,Aloe Vera,0.75
+7,25,Pudding,0.65
+8,26,Red Bean,0.75
+100,0,No Add-On,0

@@ -1,0 +1,42 @@
+IngredientID,IngredientName,Category,Quantity,Unit
+1,Black Tea Leaves,Tea Base,25000,g
+2,Green Tea Leaves,Tea Base,25000,g
+3,Oolong Tea Leaves,Tea Base,15000,g
+4,Jasmine Tea Leaves,Tea Base,15000,g
+5,Non-Dairy Creamer,Milk/Base,30000,g
+6,Whole Milk,Milk/Base,400,L
+7,Cane Sugar Syrup,Sweetener,60,L
+8,Brown Sugar Syrup,Flavor,40,L
+9,Taro Powder,Flavor,25000,g
+10,Matcha Powder,Flavor,12000,g
+11,Thai Tea Mix,Flavor,18000,g
+12,Chocolate Powder,Flavor,15000,g
+13,Mango Syrup,Flavor,30,L
+14,Strawberry Syrup,Flavor,30,L
+15,Passion Fruit Syrup,Flavor,25,L
+16,Peach Syrup,Flavor,25,L
+17,Lychee Syrup,Flavor,25,L
+18,Coconut Syrup,Flavor,25,L
+19,Tapioca Pearls,Topping,30000,g
+20,Mango Popping Boba,Topping,18000,g
+21,Strawberry Popping Boba,Topping,18000,g
+22,Lychee Jelly,Topping,16000,g
+23,Grass Jelly,Topping,15000,g
+24,Aloe Vera,Topping,12000,g
+25,Pudding,Topping,12000,g
+26,Red Bean,Topping,10000,g
+27,16 oz Cup,Supply,4000,each
+28,Cup Lid,Supply,4000,each
+29,Boba Straw,Supply,5000,each
+30,Napkin,Supply,8000,each
+31,Plastic Carryout Bag,Supply,2000,each
+32,Drink Carrier,Supply,1000,each
+33,Sealing Film Roll,Supply,30,roll
+34,Espresso,Flavor,40,L
+35,Frozen Mango Chunks,Topping,5000,g
+36,Frozen Strawberries,Topping,5000,g
+37,Bananas,Topping,5000,g
+38,Plain Yogurt,Topping,5000,g
+39,Pumpkin Spice,Flavor,25,L
+40,Coffee,Flavor,400,L
+41,Pepermint,Flavor,5000,g
