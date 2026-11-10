@@ -15,7 +15,7 @@
           <div class="brand">
             The Jade Turtle
             <small>Customer Kiosk</small>
-            <image class="brand-mark" src="JadeTurtleBubbleTeaLogo.png"></image>
+           
           </div>
           <button class="category" data-category="Milk Tea">Milk Tea</button>
           <button class="category" data-category="Fruit Tea">Fruit Tea</button>
@@ -23,7 +23,16 @@
           <button class="category" data-category="Smoothie">Smoothie</button>
           <button class="category" data-category="Seasonal Drink">Seasonal Drink</button>
         </nav>
-        <main class="items" id="drinkGrid"></main>
+        <main class="menu-content">
+          <section class="weather-panel" aria-labelledby="weatherHeading">
+            <h1 id="weatherHeading">Recommended for Today</h1>
+            <p id="weatherStatus" role="status">Checking College Station weather…</p>
+            <div class="weather-picks" id="weatherPicks"></div>
+            <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Weather data by Open-Meteo</a>
+          </section>
+          <h2 class="menu-heading" id="categoryHeading">Milk Tea</h2>
+          <div class="items" id="drinkGrid"></div>
+        </main>
       </div>
       <div class="cart-bar">
         <div>
