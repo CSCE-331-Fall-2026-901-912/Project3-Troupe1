@@ -406,3 +406,8 @@ button.remove:hover {
     border-radius: 5px;
     text-decoration: none;
 }
+
+.checkout-message {
+  min-height: 1.2em;
+  color: var(--muted);
+}

@@ -41,7 +41,8 @@ const addOns = [
 const screens = {
   menu: document.getElementById("menuScreen"),
   addon: document.getElementById("addonScreen"),
-  cart: document.getElementById("cartScreen")
+  cart: document.getElementById("cartScreen"),
+  confirm: document.getElementById("confirmScreen")
 };
 const drinkGrid = document.getElementById("drinkGrid");
 const addonList = document.getElementById("addonList");
@@ -217,12 +218,50 @@ document.getElementById("addToCart").addEventListener("click", () => {
     id: selectedDrink.id,
     name: selectedDrink.name,
     addOns: selected.map(addOn => addOn.name),
+    addOnIds: selected.map(addOn => addOn.id),
     qty: 1,
     total: selected.reduce((sum, addOn) => sum + addOn.price, selectedDrink.price)
   });
   showCart();
 });
 
+document.getElementById("checkoutButton").addEventListener("click", async () => {
+  const button = document.getElementById("checkoutButton");
+  const message = document.getElementById("checkoutMessage");
+
+  if (cart.length === 0) {
+    message.textContent = "Your cart is empty.";
+    return;
+  }
+
+  button.disabled = true;
+  message.textContent = "Placing your order...";
+
+  try {
+    const response = await fetch("/api/kiosk/orders", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        items: cart.map(item => ({ id: item.id, qty: item.qty, addOnIds: item.addOnIds }))
+      })
+    });
+    if (!response.ok) throw new Error("Request failed");
+    const order = await response.json();
+
+    cart = [];
+    message.textContent = "";
+    document.getElementById("confirmMessage").textContent =
+      "Order #" + order.orderId + " was placed. Total: $" + Number(order.total).toFixed(2);
+    updateCartBar();
+    showScreen("confirm");
+  } catch (error) {
+    message.textContent = "We couldn't place your order. Please try again.";
+  } finally {
+    button.disabled = false;
+  }
+});
+
+document.getElementById("newOrder").addEventListener("click", () => showCategory(currentCategory));
 document.getElementById("addonBack").addEventListener("click", () => showCategory(currentCategory));
 document.getElementById("keepShopping").addEventListener("click", () => showCategory(currentCategory));
 document.getElementById("cartLink").addEventListener("click", showCart);
