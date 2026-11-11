@@ -41,6 +41,8 @@ button {
 }
 
 .screen {
+  position: relative;
+  z-index: 0;
   display: none;
   flex-direction: column;
   height: 100%;
@@ -54,7 +56,7 @@ button {
   height: 200px;
   line-height: 1.2;
   color: var(--white);
-  background: var(--jade);
+  background: transparent;
   border-bottom: 1px solid rgba(255, 255, 255, 0.18);
 }
 
@@ -92,7 +94,14 @@ button {
   display: flex;
   flex-direction: column;
   width: 26%;
-  background: var(--jade-dark);
+  background: transparent;
+}
+
+.brand-mark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
 }
 
 .category {
@@ -130,7 +139,7 @@ button:focus-visible,
   padding: 12px;
   overflow-y: auto;
   align-content: start;
-  background: var(--page);
+  background: transparent;
 }
 
 .item {
@@ -381,7 +390,7 @@ button.remove:hover {
 .weather-panel a { display: inline-block; margin-top: 12px; color: var(--jade-dark); font-size: .8rem; }
 .weather-picks { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
 .weather-picks .item { min-height: 112px; justify-content: center; font-size: .9rem; line-height: 1.3; }
-.menu-heading { margin-bottom: 12px; font: bold 1.3rem Georgia, serif; color: var(--jade-dark); }
+.menu-heading { margin-bottom: 12px; font: bold 1.3rem Georgia, serif; color: var(--white); }
 @media (max-width: 560px) {
   .menu-content { width: 69%; padding: 8px; }
   .weather-panel { padding: 12px; }
