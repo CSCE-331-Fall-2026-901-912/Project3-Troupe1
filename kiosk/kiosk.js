@@ -51,6 +51,7 @@ const categoryButtons = document.querySelectorAll(".category");
 let currentCategory = "Milk Tea";
 let selectedDrink = null;
 let cart = [];
+let favoriteItems = [];
 
 function showScreen(name) {
   Object.keys(screens).forEach(key => {
@@ -77,8 +78,15 @@ function showCategory(category) {
     button.classList.toggle("active", button.dataset.category === category);
   });
 
-  menuItems
-    .filter(item => item.category === category)
+  const visibleItems = category === "Favorites"
+    ? favoriteItems
+    : menuItems.filter(item => item.category === category);
+
+  if (category === "Favorites" && visibleItems.length === 0) {
+    drinkGrid.innerHTML = "<p>Favorites are unavailable right now.</p>";
+  }
+
+  visibleItems
     .forEach(item => {
       const drink = document.createElement("button");
       drink.className = "item";
@@ -182,8 +190,25 @@ function showCart() {
   showScreen("cart");
 }
 
+async function loadFavorites() {
+  try {
+    const response = await fetch("/api/kiosk/top-drinks");
+    if (!response.ok) throw new Error("Request failed");
+    const rows = await response.json();
+    favoriteItems = rows
+      .map(row => menuItems.find(item => item.id === Number(row.menuitemid)))
+      .filter(Boolean);
+  } catch (error) {
+    favoriteItems = [];
+  }
+}
+
 categoryButtons.forEach(button => {
-  button.addEventListener("click", () => showCategory(button.dataset.category));
+  button.addEventListener("click", async () => {
+    const category = button.dataset.category;
+    if (category === "Favorites") await loadFavorites();
+    showCategory(category);
+  });
 });
 
 document.getElementById("addToCart").addEventListener("click", () => {
