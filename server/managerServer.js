@@ -11,6 +11,8 @@ const employeeListSQL = fs.readFileSync(path.join(__dirname, './queries/employee
 const employeeAddSQL = fs.readFileSync(path.join(__dirname, './queries/employee_add.sql'), 'utf8');
 const employeeRemoveSQL = fs.readFileSync(path.join(__dirname, './queries/employee_remove.sql'), 'utf8');
 const employeeEditSQL = fs.readFileSync(path.join(__dirname, './queries/employee_edit.sql'), 'utf8');
+const menuListSQL = fs.readFileSync(path.join(__dirname, './queries/menu_list.sql'), 'utf8');
+
 
 router.get('/x-report', async (req, res) => {
     try {
@@ -161,5 +163,18 @@ router.put('/employees/:id', async (req, res) => {
         });
     }
 });
+
+router.get('/menu', async (req, res) => {
+    try {
+        const result = await pool.query(menuListSQL);
+        res.json(result.rows);
+    } catch (error) {
+        console.error('Menu List Error:', error);
+        res.status(500).json({
+            error: 'Failed to load menu items'
+        });
+    }
+});
+
 
 module.exports = router;
