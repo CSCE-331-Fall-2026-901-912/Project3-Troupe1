@@ -12,7 +12,9 @@ const employeeAddSQL = fs.readFileSync(path.join(__dirname, './queries/employee_
 const employeeRemoveSQL = fs.readFileSync(path.join(__dirname, './queries/employee_remove.sql'), 'utf8');
 const employeeEditSQL = fs.readFileSync(path.join(__dirname, './queries/employee_edit.sql'), 'utf8');
 const menuListSQL = fs.readFileSync(path.join(__dirname, './queries/menu_list.sql'), 'utf8');
-
+const menuAddSQL = fs.readFileSync(path.join(__dirname, './queries/menu_add.sql'), 'utf8');
+const menuEditSQL = fs.readFileSync(path.join(__dirname, './queries/menu_edit.sql'), 'utf8');
+const menuRemoveSQL = fs.readFileSync(path.join(__dirname, './queries/menu_remove.sql'), 'utf8');
 
 router.get('/x-report', async (req, res) => {
     try {
@@ -176,5 +178,122 @@ router.get('/menu', async (req, res) => {
     }
 });
 
+router.post('/menu', async (req, res) => {
+    try {
+        const { menuItemID, category, menuItemName, ingredientList, price } = req.body;
+        if (
+            !Number.isSafeInteger(menuItemID) ||
+            menuItemID <= 0 ||
+            typeof category !== 'string' ||
+            !category.trim() ||
+            typeof menuItemName !== 'string' ||
+            !menuItemName.trim() ||
+            typeof ingredientList !== 'string' ||
+            !Number.isFinite(Number(price)) ||
+            Number(price) < 0
+        ) {
+            return res.status(400).json({
+                error: 'Valid menu item information is required'
+            });
+        }
+
+        const result = await pool.query(menuAddSQL, [
+            menuItemID,
+            category.trim(),
+            menuItemName.trim(),
+            ingredientList.trim(),
+            Number(price)
+        ]);
+        res.status(201).json(result.rows[0]);
+    } catch (error) {
+        console.error('Add Menu Error:', error);
+
+        if (error.code === '23505') {
+            return res.status(409).json({
+                error: 'Menu Item ID already exists'
+            });
+        }
+
+        res.status(500).json({
+            error: 'Failed to add menu item'
+        });
+    }
+});
+
+router.put('/menu/:id', async (req, res) => {
+    try {
+        const menuItemID = Number(req.params.id);
+        const { category, menuItemName, ingredientList, price } = req.body;
+        if (
+            !Number.isSafeInteger(menuItemID) ||
+            menuItemID <= 0 ||
+            typeof category !== 'string' ||
+            !category.trim() ||
+            typeof menuItemName !== 'string' ||
+            !menuItemName.trim() ||
+            typeof ingredientList !== 'string' ||
+            !Number.isFinite(Number(price)) ||
+            Number(price) < 0
+        ) {
+            return res.status(400).json({
+                error: 'Valid menu item information is required'
+            });
+        }
+
+        const result = await pool.query(menuEditSQL, [
+            category.trim(),
+            menuItemName.trim(),
+            ingredientList.trim(),
+            Number(price),
+            menuItemID
+        ]);
+
+        if (result.rowCount === 0) {
+            return res.status(404).json({
+                error: 'Menu item not found'
+            });
+        }
+        res.json(result.rows[0]);
+    } catch (error) {
+        console.error('Edit Menu Error:', error);
+        res.status(500).json({
+            error: 'Failed to edit menu item'
+        });
+    }
+});
+
+router.delete('/menu/:id', async (req, res) => {
+    try {
+        const menuItemID = Number(req.params.id);
+        if (!Number.isSafeInteger(menuItemID) || menuItemID <= 0) {
+            return res.status(400).json({
+                error: 'Invalid Menu Item ID'
+            });
+        }
+
+        const result = await pool.query(menuRemoveSQL, [menuItemID]);
+
+        if (result.rowCount === 0) {
+            return res.status(404).json({
+                error: 'Menu item not found'
+            });
+        }
+
+        res.json({
+            message: 'Menu item removed successfully'
+        });
+    } catch (error) {
+        console.error('Remove Menu Error:', error);
+
+        if (error.code === '23503') {
+            return res.status(409).json({
+                error: 'Cannot remove a menu item with existing order history'
+            });
+        }
+        res.status(500).json({
+            error: 'Failed to remove menu item'
+        });
+    }
+});
 
 module.exports = router;

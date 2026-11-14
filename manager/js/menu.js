@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function loadMenuItems() {
     const menuBody = document.getElementById('menuBody');
-
     try {
         const response = await fetch('/api/manager/menu');
         if (!response.ok) {
@@ -50,5 +49,150 @@ async function loadMenuItems() {
 
     } catch (error) {
         console.error('Menu Error:', error);
+    }
+}
+
+async function addMenuItem() {
+    const idInput = prompt('Enter Menu Item ID:');
+    if (idInput === null) return;
+
+    const menuItemID = Number(idInput);
+    if (!Number.isSafeInteger(menuItemID) || menuItemID <= 0) {
+        alert('Invalid Menu Item ID.');
+        return;
+    }
+
+    const menuItemName = prompt('Enter Menu Item Name:');
+    if (menuItemName === null) return;
+
+    const category = prompt('Enter Category:');
+    if (category === null) return;
+
+    const ingredientList = prompt('Enter Ingredient List:');
+    if (ingredientList === null) return;
+
+    const priceInput = prompt('Enter Price:');
+    if (priceInput === null) return;
+
+    const price = Number(priceInput);
+    if (!menuItemName.trim() || !category.trim() 
+        || !Number.isFinite(price) || priceInput.trim() === '' || price < 0) {
+        alert('Invalid menu item information.');
+        return;
+    }
+    try {
+        const response = await fetch('/api/manager/menu', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                menuItemID,
+                category,
+                menuItemName,
+                ingredientList,
+                price
+            })
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.error || 'Failed to add menu item');
+        }
+        alert('Menu item added successfully.');
+        await loadMenuItems();
+    } catch (error) {
+        console.error('Add Menu Error:', error);
+        alert(error.message);
+    }
+}
+
+async function editMenuItem(item) {
+    const menuItemName = prompt(
+        'Enter Menu Item Name:',
+        item.menuitemname
+    );
+    if (menuItemName === null) return;
+
+    const category = prompt(
+        'Enter Category:',
+        item.category
+    );
+    if (category === null) return;
+
+    const ingredientList = prompt(
+        'Enter Ingredient List:',
+        item.ingredientlist || ''
+    );
+    if (ingredientList === null) return;
+
+    const priceInput = prompt(
+        'Enter Price:',
+        item.price
+    );
+    if (priceInput === null) return;
+
+    const price = Number(priceInput);
+
+    if (!menuItemName.trim() || !category.trim() ||
+        !Number.isFinite(price) || priceInput.trim() === '' || price < 0) {
+        alert('Invalid menu item information.');
+        return;
+    }
+    try {
+        const response = await fetch(
+            `/api/manager/menu/${item.menuitemid}`,
+            {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    category,
+                    menuItemName,
+                    ingredientList,
+                    price
+                })
+            }
+        );
+
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.error || 'Failed to edit menu item');
+        }
+
+        alert('Menu item updated successfully.');
+        await loadMenuItems();
+
+    } catch (error) {
+        console.error('Edit Menu Error:', error);
+        alert(error.message);
+    }
+}
+
+async function removeMenuItem(menuItemID) {
+    if (!confirm('Are you sure you want to remove this menu item?')) {
+        return;
+    }
+
+    try {
+        const response = await fetch(
+            `/api/manager/menu/${menuItemID}`,
+            {
+                method: 'DELETE'
+            }
+        );
+
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.error || 'Failed to remove menu item');
+        }
+
+        alert('Menu item removed successfully.');
+        await loadMenuItems();
+
+    } catch (error) {
+        console.error('Remove Menu Error:', error);
+        alert(error.message);
     }
 }
