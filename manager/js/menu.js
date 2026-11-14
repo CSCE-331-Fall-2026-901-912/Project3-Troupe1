@@ -1,5 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     loadMenuItems();
+    const addButton = document.querySelector('[data-add="menu"]');
+    addButton.addEventListener('click', addMenuItem);
 });
 
 async function loadMenuItems() {
@@ -31,10 +33,16 @@ async function loadMenuItems() {
             const editButton = document.createElement('button');
             editButton.textContent = 'Edit';
             editButton.className = 'small-btn';
-
+            editButton.addEventListener('click', () => {
+                editMenuItem(item);
+            });
+            
             const removeButton = document.createElement('button');
             removeButton.textContent = 'Remove';
             removeButton.className = 'small-btn danger';
+            removeButton.addEventListener('click', () => {
+                removeMenuItem(item.menuitemid);
+            });
 
             actionCell.appendChild(editButton);
             actionCell.appendChild(removeButton);
