@@ -26,10 +26,8 @@
         <!-- Popular Drinks -->
         <section class="panel">
             <h2>Popular Drinks</h2>
-            <div class="popular-drinks">
-                <button class="drink-button" data-id="1">Classic Milk Tea</button>
-                <button class="drink-button" data-id="2">Taro Milk Tea</button>
-                <button class="drink-button" data-id="9">Mango Green Tea</button>
+            <div class="popular-drinks" id="popularDrinks">
+                <p>Loading popular drinks...</p>
             </div>
         </section>
 
@@ -43,11 +41,7 @@
                 </div>
 
                 <div class="category-grid" id="menuGrid">
-                    <button class="category-button" data-category="Milk Tea">Milk Tea</button>
-                    <button class="category-button" data-category="Fruit Tea">Fruit Tea</button>
-                    <button class="category-button" data-category="Coffee">Coffee</button>
-                    <button class="category-button" data-category="Smoothie">Smoothie</button>
-                    <button class="category-button" data-category="Seasonal Drink">Seasonal</button>
+                    <p>Loading menu...</p>
                 </div>
 
                 <div class="drink-grid" id="drinkGrid"></div>
@@ -70,6 +64,15 @@
             <!-- Current Order -->
             <section class="panel order-section">
                 <h2>Current Order</h2>
+
+                <!-- Sales recorded by the cashier today -->
+                <p aria-live="polite">
+                    <strong>Today's Cashier Sales:</strong>
+                    <span id="todaySales">Loading...</span>
+                    <span> | </span>
+                    <strong>Orders:</strong>
+                    <span id="todayOrders">Loading...</span>
+                </p>
 
                 <div class="order-list" id="orderList">
                     <p class="empty-order">No items in order yet.</p>
