@@ -4,6 +4,50 @@ const pool = require('./db.js');
 
 const router = express.Router();
 
+// Load current menu items for the cashier
+router.get('/menu', async (req, res) => {
+    try {
+        const result = await pool.query(
+            'SELECT MenuItemID AS id, MenuItemName AS name, Category AS category, Price AS price ' +
+            'FROM MenuItem ORDER BY MenuItemID'
+        );
+        res.json(result.rows);
+    } catch (error) {
+        console.error('Cashier Menu Error:', error);
+        res.status(500).json({ error: 'Could not load cashier menu' });
+    }
+});
+
+// Load available add-ons (100 is the database placeholder for no add-on)
+router.get('/add-ons', async (req, res) => {
+    try {
+        const result = await pool.query(
+            'SELECT AddOnsID AS id, Name AS name, Price AS price ' +
+            'FROM AddOn WHERE AddOnsID <> 100 ORDER BY AddOnsID'
+        );
+        res.json(result.rows);
+    } catch (error) {
+        console.error('Cashier Add-Ons Error:', error);
+        res.status(500).json({ error: 'Could not load cashier add-ons' });
+    }
+});
+
+// Use actual order history for the three popular drink buttons
+router.get('/popular', async (req, res) => {
+    try {
+        const result = await pool.query(
+            'SELECT m.MenuItemID AS id FROM MenuItem m ' +
+            'LEFT JOIN OrderItems oi ON oi.MenuID = m.MenuItemID ' +
+            'GROUP BY m.MenuItemID ' +
+            'ORDER BY COUNT(oi.ItemID) DESC, m.MenuItemID LIMIT 3'
+        );
+        res.json(result.rows);
+    } catch (error) {
+        console.error('Cashier Popular Drinks Error:', error);
+        res.status(500).json({ error: 'Could not load popular drinks' });
+    }
+});
+
 // Save an order submitted from the cashier screen
 router.post('/orders', async (req, res) => {
     const items = req.body && req.body.items;

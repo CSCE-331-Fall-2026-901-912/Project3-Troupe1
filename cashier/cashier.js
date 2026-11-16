@@ -1,32 +1,6 @@
 
-const menuItems = [
-    { id: 1, name: "Classic Milk Tea", category: "Milk Tea", price: 5.25 },
-    { id: 2, name: "Taro Milk Tea", category: "Milk Tea", price: 5.75 },
-    { id: 3, name: "Matcha Milk Tea", category: "Milk Tea", price: 6.00 },
-    { id: 4, name: "Brown Sugar Milk Tea", category: "Milk Tea", price: 6.25 },
-    { id: 5, name: "Thai Milk Tea", category: "Milk Tea", price: 5.50 },
-    { id: 6, name: "Oolong Milk Tea", category: "Milk Tea", price: 5.50 },
-    { id: 7, name: "Jasmine Milk Tea", category: "Milk Tea", price: 5.50 },
-    { id: 8, name: "Chocolate Milk Tea", category: "Milk Tea", price: 5.75 },
-    { id: 9, name: "Mango Green Tea", category: "Fruit Tea", price: 5.75 },
-    { id: 10, name: "Strawberry Green Tea", category: "Fruit Tea", price: 5.75 },
-    { id: 11, name: "Passion Fruit Green Tea", category: "Fruit Tea", price: 5.75 },
-    { id: 12, name: "Peach Green Tea", category: "Fruit Tea", price: 5.50 },
-    { id: 13, name: "Lychee Green Tea", category: "Fruit Tea", price: 5.75 },
-    { id: 14, name: "Mango Milk Tea", category: "Milk Tea", price: 6.00 },
-    { id: 15, name: "Strawberry Milk Tea", category: "Milk Tea", price: 6.00 },
-    { id: 16, name: "Coconut Milk Tea", category: "Milk Tea", price: 6.75 },
-    { id: 17, name: "Brown Sugar Boba Coffee", category: "Coffee", price: 6.25 },
-    { id: 18, name: "Yuanyang Coffee Milk Tea", category: "Coffee", price: 5.75 },
-    { id: 19, name: "Thai Tea Coffee", category: "Coffee", price: 6.25 },
-    { id: 20, name: "Coconut Mocha With Grass Jelly", category: "Coffee", price: 6.50 },
-    { id: 21, name: "Mango Passion Fruit Smoothie", category: "Smoothie", price: 6.50 },
-    { id: 22, name: "Strawberry Banana Smoothie", category: "Smoothie", price: 6.50 },
-    { id: 23, name: "Peach Lychee Smoothie", category: "Smoothie", price: 6.25 },
-    { id: 24, name: "Taro Coconut Smoothie", category: "Smoothie", price: 6.50 },
-    { id: 25, name: "Pumpkin spice latte", category: "Seasonal Drink", price: 6.50 },
-    { id: 26, name: "Pepermint Shake", category: "Seasonal Drink", price: 6.00 }
-];
+let menuItems = [];
+let addOns = [];
 
 const menuGrid = document.getElementById("menuGrid");
 const drinkGrid = document.getElementById("drinkGrid");
@@ -35,40 +9,117 @@ const backButton = document.getElementById("backButton");
 const customization = document.getElementById("customization");
 const addonList = document.getElementById("addonList");
 const orderList = document.getElementById("orderList");
-
-const addOns = [
-    { id: 1, name: "Tapioca Pearls", price: 0.75 },
-    { id: 2, name: "Mango Popping Boba", price: 0.75 },
-    { id: 3, name: "Strawberry Popping Boba", price: 0.75 },
-    { id: 4, name: "Lychee Jelly", price: 0.65 },
-    { id: 5, name: "Grass Jelly", price: 0.65 },
-    { id: 6, name: "Aloe Vera", price: 0.75 },
-    { id: 7, name: "Pudding", price: 0.65 },
-    { id: 8, name: "Red Bean", price: 0.75 }
-];
+const popularDrinks = document.getElementById("popularDrinks");
 
 let currentCategory = "";
 let selectedDrink = null;
 let currentOrder = [];
 
-// Category buttons
-document.querySelectorAll(".category-button").forEach(button => {
-    button.addEventListener("click", () => showCategory(button.dataset.category));
-});
+// Get the menu and add-ons from PostgreSQL when the page loads
+async function loadCashierMenu() {
+    try {
+        const [menuResponse, addOnResponse] = await Promise.all([
+            fetch("/api/cashier/menu"),
+            fetch("/api/cashier/add-ons")
+        ]);
 
-// Popular drink buttons
-document.querySelectorAll(".popular-drinks .drink-button").forEach(button => {
-    button.addEventListener("click", () => {
-        const item = menuItems.find(item => item.id === Number(button.dataset.id));
-
-        if (item) {
-            currentCategory = item.category;
-            showDrinkCustomization(item);
+        if (!menuResponse.ok || !addOnResponse.ok) {
+            throw new Error("Could not load the cashier menu");
         }
-    });
-});
 
-// Show drinks from a category
+        const [menuData, addOnData] = await Promise.all([
+            menuResponse.json(),
+            addOnResponse.json()
+        ]);
+
+        if (!Array.isArray(menuData) || !Array.isArray(addOnData)) {
+            throw new Error("Unexpected menu data from the server");
+        }
+
+        // PostgreSQL DECIMAL values arrive as strings, so convert prices to numbers
+        menuItems = menuData.map(item => ({
+            id: Number(item.id),
+            name: item.name,
+            category: item.category,
+            price: Number(item.price)
+        }));
+
+        addOns = addOnData.map(addOn => ({
+            id: Number(addOn.id),
+            name: addOn.name,
+            price: Number(addOn.price)
+        }));
+
+        showCategories();
+        showCategoryButtons();
+        loadPopularDrinks();
+
+    } catch (error) {
+        console.error("Cashier menu error:", error);
+        menuGrid.textContent = "Could not load the menu. Please refresh the page.";
+        popularDrinks.textContent = "Popular drinks are unavailable right now.";
+    }
+}
+
+// Create category buttons using the categories in the database
+function showCategoryButtons() {
+    menuGrid.replaceChildren();
+    const categories = [...new Set(menuItems.map(item => item.category))];
+
+    if (categories.length === 0) {
+        menuGrid.textContent = "No drinks are available.";
+        return;
+    }
+
+    categories.forEach(category => {
+        const button = document.createElement("button");
+        button.className = "category-button";
+        button.textContent = category;
+        button.addEventListener("click", () => showCategory(category));
+        menuGrid.appendChild(button);
+    });
+}
+
+// Load the three best-selling drinks from actual order history
+async function loadPopularDrinks() {
+    try {
+        const response = await fetch("/api/cashier/popular");
+        if (!response.ok) {
+            throw new Error("Could not load popular drinks");
+        }
+
+        const popularData = await response.json();
+        if (!Array.isArray(popularData)) {
+            throw new Error("Unexpected popular drink data");
+        }
+
+        popularDrinks.replaceChildren();
+
+        popularData.forEach(row => {
+            const item = menuItems.find(item => item.id === Number(row.id));
+            if (!item) return;
+
+            const button = document.createElement("button");
+            button.className = "drink-button";
+            button.textContent = item.name;
+            button.addEventListener("click", () => {
+                currentCategory = item.category;
+                showDrinkCustomization(item);
+            });
+            popularDrinks.appendChild(button);
+        });
+
+        if (popularDrinks.children.length === 0) {
+            popularDrinks.textContent = "No popular drinks available.";
+        }
+
+    } catch (error) {
+        console.error("Popular drinks error:", error);
+        popularDrinks.textContent = "Popular drinks are unavailable right now.";
+    }
+}
+
+// Show drinks from the selected category
 function showCategory(category) {
     currentCategory = category;
     menuTitle.textContent = category;
@@ -76,21 +127,21 @@ function showCategory(category) {
     drinkGrid.style.display = "grid";
     customization.style.display = "none";
     backButton.style.display = "block";
-    drinkGrid.innerHTML = "";
+    drinkGrid.replaceChildren();
 
-    menuItems.forEach(item => {
-        if (item.category === category) {
-            const drink = document.createElement("button");
-            drink.className = "menu-drink";
+    menuItems.filter(item => item.category === category).forEach(item => {
+        const drink = document.createElement("button");
+        drink.className = "menu-drink";
 
-            drink.innerHTML = `
-                <strong>${item.name}</strong>
-                <span>$${item.price.toFixed(2)}</span>
-            `;
+        const name = document.createElement("strong");
+        name.textContent = item.name;
 
-            drink.addEventListener("click", () => showDrinkCustomization(item));
-            drinkGrid.appendChild(drink);
-        }
+        const price = document.createElement("span");
+        price.textContent = "$" + item.price.toFixed(2);
+
+        drink.append(name, price);
+        drink.addEventListener("click", () => showDrinkCustomization(item));
+        drinkGrid.appendChild(drink);
     });
 }
 
@@ -114,36 +165,40 @@ function showDrinkCustomization(item) {
     drinkGrid.style.display = "none";
     customization.style.display = "block";
     backButton.style.display = "block";
-    addonList.innerHTML = "";
+    addonList.replaceChildren();
 
     let availableAddOns = addOns;
 
-    // Match the available add-ons from Project 2
-    if (item.id >= 25) {
+    // Preserve the Project 2 customization rules
+    if (item.category === "Seasonal" || item.category === "Seasonal Drink") {
         availableAddOns = [];
     } else if (item.id === 20) {
         availableAddOns = addOns.filter(addOn => addOn.name !== "Grass Jelly");
     }
 
     if (availableAddOns.length === 0) {
-        addonList.innerHTML = "<p>No optional add-ons for this drink.</p>";
+        const message = document.createElement("p");
+        message.textContent = "No optional add-ons for this drink.";
+        addonList.appendChild(message);
     }
 
     availableAddOns.forEach(addOn => {
         const label = document.createElement("label");
         label.className = "addon-option";
 
-        label.innerHTML = `
-            <input type="checkbox" value="${addOn.id}">
-            <span>${addOn.name}</span>
-            <span>+$${addOn.price.toFixed(2)}</span>
-        `;
-
-        addonList.appendChild(label);
-    });
-
-    addonList.querySelectorAll("input").forEach(input => {
+        const input = document.createElement("input");
+        input.type = "checkbox";
+        input.value = addOn.id;
         input.addEventListener("change", updateCustomTotal);
+
+        const name = document.createElement("span");
+        name.textContent = addOn.name;
+
+        const price = document.createElement("span");
+        price.textContent = "+$" + addOn.price.toFixed(2);
+
+        label.append(input, name, price);
+        addonList.appendChild(label);
     });
 
     updateCustomTotal();
@@ -151,34 +206,35 @@ function showDrinkCustomization(item) {
 
 // Get the selected add-ons
 function getSelectedAddOns() {
-    return Array.from(addonList.querySelectorAll("input:checked")).map(input => {
-        return addOns.find(addOn => addOn.id === Number(input.value));
+    return Array.from(addonList.querySelectorAll("input:checked"))
+        .map(input => addOns.find(addOn => addOn.id === Number(input.value)))
+        .filter(Boolean);
+}
+
+// Calculate prices using cents to avoid floating-point rounding errors
+function getDrinkTotal(drink, selectedAddOns) {
+    let cents = Math.round(drink.price * 100);
+    selectedAddOns.forEach(addOn => {
+        cents += Math.round(addOn.price * 100);
     });
+    return cents / 100;
 }
 
 // Update the customization price
 function updateCustomTotal() {
-    let total = selectedDrink.price;
-
-    getSelectedAddOns().forEach(addOn => {
-        total += addOn.price;
-    });
-
+    if (!selectedDrink) return;
+    const total = getDrinkTotal(selectedDrink, getSelectedAddOns());
     document.getElementById("customTotal").textContent = "Total: $" + total.toFixed(2);
 }
 
 // Add the customized drink to the order
-document.getElementById("addToOrderButton").addEventListener("click", () => {
-    if (!selectedDrink) return;
+const addToOrderButton = document.getElementById("addToOrderButton");
+addToOrderButton.addEventListener("click", () => {
+    if (!selectedDrink || addToOrderButton.disabled) return;
 
     const selectedAddOns = getSelectedAddOns();
-    let total = selectedDrink.price;
+    const total = getDrinkTotal(selectedDrink, selectedAddOns);
 
-    selectedAddOns.forEach(addOn => {
-        total += addOn.price;
-    });
-
-    // Store drink and add-on IDs for the backend
     currentOrder.push({
         id: selectedDrink.id,
         name: selectedDrink.name,
@@ -193,33 +249,36 @@ document.getElementById("addToOrderButton").addEventListener("click", () => {
 
 // Update the order display
 function updateOrder() {
-    orderList.innerHTML = "";
-    let orderTotal = 0;
+    orderList.replaceChildren();
+    let totalCents = 0;
 
     if (currentOrder.length === 0) {
-        orderList.innerHTML = '<p class="empty-order">No items in order yet.</p>';
+        const message = document.createElement("p");
+        message.className = "empty-order";
+        message.textContent = "No items in order yet.";
+        orderList.appendChild(message);
     }
 
     currentOrder.forEach(item => {
-        orderTotal += item.total;
+        totalCents += Math.round(item.total * 100);
 
         const row = document.createElement("div");
         row.className = "order-item";
 
-        const addOnText = item.addOns.length ? item.addOns.join(", ") : "No add-ons";
+        const details = document.createElement("div");
+        const name = document.createElement("strong");
+        name.textContent = item.name;
+        const toppings = document.createElement("small");
+        toppings.textContent = item.addOns.length ? item.addOns.join(", ") : "No add-ons";
+        details.append(name, toppings);
 
-        row.innerHTML = `
-            <div>
-                <strong>${item.name}</strong>
-                <small>${addOnText}</small>
-            </div>
-            <span>$${item.total.toFixed(2)}</span>
-        `;
-
+        const price = document.createElement("span");
+        price.textContent = "$" + item.total.toFixed(2);
+        row.append(details, price);
         orderList.appendChild(row);
     });
 
-    document.getElementById("orderTotal").textContent = "$" + orderTotal.toFixed(2);
+    document.getElementById("orderTotal").textContent = "$" + (totalCents / 100).toFixed(2);
     document.getElementById("checkoutButton").disabled = currentOrder.length === 0;
 }
 
@@ -233,6 +292,7 @@ backButton.addEventListener("click", () => {
 });
 
 // Submit cashier orders to the backend
+// This is the same checkout behavior that was working in Step 2.
 document.getElementById("checkoutButton").addEventListener("click", async () => {
     if (currentOrder.length === 0) return;
 
@@ -280,3 +340,6 @@ document.getElementById("checkoutButton").addEventListener("click", async () => 
         addButton.disabled = false;
     }
 });
+
+// Load live menu data as soon as the cashier page opens
+loadCashierMenu();
