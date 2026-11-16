@@ -178,9 +178,12 @@ document.getElementById("addToOrderButton").addEventListener("click", () => {
         total += addOn.price;
     });
 
+    // Store drink and add-on IDs for the backend
     currentOrder.push({
+        id: selectedDrink.id,
         name: selectedDrink.name,
         addOns: selectedAddOns.map(addOn => addOn.name),
+        addOnIds: selectedAddOns.map(addOn => addOn.id),
         total: total
     });
 
@@ -188,7 +191,7 @@ document.getElementById("addToOrderButton").addEventListener("click", () => {
     showCategory(currentCategory);
 });
 
-
+// Update the order display
 function updateOrder() {
     orderList.innerHTML = "";
     let orderTotal = 0;
@@ -220,7 +223,6 @@ function updateOrder() {
     document.getElementById("checkoutButton").disabled = currentOrder.length === 0;
 }
 
-
 // Back button
 backButton.addEventListener("click", () => {
     if (customization.style.display === "block") {
@@ -230,10 +232,47 @@ backButton.addEventListener("click", () => {
     }
 });
 
+// Submit cashier orders to the backend
+document.getElementById("checkoutButton").addEventListener("click", async () => {
+    if (currentOrder.length === 0) return;
 
-// Clear the order when checking out
-document.getElementById("checkoutButton").addEventListener("click", () => {
-    currentOrder = [];
-    updateOrder();
-    showCategories();
+    const button = document.getElementById("checkoutButton");
+    button.disabled = true;
+    button.textContent = "Sending...";
+
+    try {
+        // Send drink and add-on IDs to the backend
+        const response = await fetch("/api/cashier/orders", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                items: currentOrder.map(item => ({
+                    id: item.id,
+                    addOnIds: item.addOnIds
+                }))
+            })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.error || "Request failed");
+        }
+
+        // Step 1 only confirms the backend received the order
+        alert("Backend received " + result.itemCount +
+              " drink(s). This order has not been saved yet.");
+
+        // Do not clear the order until Step 2 saves it
+
+    } catch (error) {
+        console.error("Cashier checkout error:", error);
+        alert("Couldn't send order: " + error.message);
+
+    } finally {
+        button.textContent = "Checkout";
+        button.disabled = currentOrder.length === 0;
+    }
 });
