@@ -61,37 +61,6 @@ async function loadCashierMenu() {
     }
 }
 
-// Display the total from saved cashier orders for today's Central Time date.
-async function loadTodaySales() {
-    const salesText = document.getElementById("todaySales");
-    const ordersText = document.getElementById("todayOrders");
-
-    try {
-        const response = await fetch("/api/cashier/sales-today", {
-            cache: "no-store"
-        });
-
-        if (!response.ok) {
-            throw new Error("Could not load today's sales");
-        }
-
-        const data = await response.json();
-        const sales = Number(data.sales);
-        const orders = Number(data.orders);
-
-        if (!Number.isFinite(sales) || !Number.isInteger(orders) || orders < 0) {
-            throw new Error("Invalid sales data from the server");
-        }
-
-        salesText.textContent = "$" + sales.toFixed(2);
-        ordersText.textContent = String(orders);
-    } catch (error) {
-        console.error("Cashier sales error:", error);
-        salesText.textContent = "Unavailable";
-        ordersText.textContent = "Unavailable";
-    }
-}
-
 // Create category buttons using the categories in the database
 function showCategoryButtons() {
     menuGrid.replaceChildren();
@@ -359,10 +328,6 @@ document.getElementById("checkoutButton").addEventListener("click", async () => 
         updateOrder();
         showCategories();
 
-        // Refresh the sales summary after the order is saved.
-        // A summary error does not undo the successful checkout.
-        await loadTodaySales();
-
         alert(`Order #${result.orderId} saved! Total: $${Number(result.total).toFixed(2)}`);
 
     } catch (error) {
@@ -376,6 +341,5 @@ document.getElementById("checkoutButton").addEventListener("click", async () => 
     }
 });
 
-// Load the live menu and today's cashier sales on page load.
+// Load the live menu on page load.
 loadCashierMenu();
-loadTodaySales();
