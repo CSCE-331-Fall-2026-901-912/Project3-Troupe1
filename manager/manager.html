@@ -106,7 +106,6 @@
     <section class="page" id="inventory">
       <div class="heading-line">
           <h1>Inventory Management</h1>
-          <button class="action" data-add="inventory">Add Ingredient</button>
         </div>
       <article class="panel">
         <table>
@@ -118,6 +117,19 @@
           </tr></thead>
           <tbody id="inventoryBody"></tbody>
         </table>
+        <form id="addIngredientForm" class="inventory-add-form">
+          <label for="ingredientName">Ingredient name
+            <input type="text" id="ingredientName" placeholder="e.g., Brown Sugar" required />
+          </label>
+          <label for="ingredientQuantity">Quantity
+            <input type="number" id="ingredientQuantity" placeholder="e.g., 10" min="0" step="any" required />
+          </label>
+          <label for="ingredientUnit">Unit
+            <input type="text" id="ingredientUnit" placeholder="e.g., kg or L" required />
+          </label>
+          <button class="action" type="submit" data-add="inventory">Add Ingredient</button>
+        </form>
+        <p id="inventoryStatus" role="status" aria-live="polite"></p>
       </article>
     </section>
 

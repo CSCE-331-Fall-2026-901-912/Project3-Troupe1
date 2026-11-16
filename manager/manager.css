@@ -307,3 +307,32 @@ footer {
     font-size: 12px;
 }
 
+
+/* Inline ingredient form below the inventory table. */
+.inventory-add-form {
+    display: flex;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 24px;
+}
+
+.inventory-add-form label {
+    flex: 1 1 180px;
+    margin-right: 0;
+    min-width: 0;
+}
+
+.inventory-add-form input {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+}
+
+.inventory-add-form button {
+    min-height: 44px;
+}
+
+#inventoryStatus:empty {
+    display: none;
+}

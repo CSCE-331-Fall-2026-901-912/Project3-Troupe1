@@ -7,46 +7,59 @@ document.addEventListener("DOMContentLoaded", () => {
     ];
 
     const inventoryBody = document.getElementById("inventoryBody");
-    const addButton = document.querySelector('[data-add="inventory"]');
+    const addForm = document.getElementById("addIngredientForm");
+    const nameInput = document.getElementById("ingredientName");
+    const quantityInput = document.getElementById("ingredientQuantity");
+    const unitInput = document.getElementById("ingredientUnit");
+    const status = document.getElementById("inventoryStatus");
+    let nextId = Math.max(0, ...inventoryItems.map(item => item.id)) + 1;
 
     function renderInventory() {
         inventoryBody.innerHTML = "";
         inventoryItems.forEach((item) => {
             const row = document.createElement("tr");
             row.innerHTML = `
-                <td>${item.name}</td>
-                <td>${item.quantity}</td>
-                <td>${item.unit}</td>
+                <td></td>
+                <td></td>
+                <td></td>
                 <td>
                     <button data-edit-inventory="${item.id}">Edit</button>
                     <button data-remove-inventory="${item.id}">Remove</button>
                 </td>
             `;
+            row.cells[0].textContent = item.name;
+            row.cells[1].textContent = item.quantity;
+            row.cells[2].textContent = item.unit;
             inventoryBody.appendChild(row);
         });
     }
 
-    addButton.addEventListener("click", () => {
-        const name = prompt("Enter ingredient name:");
-        if (name === null || !name.trim()) return;
-        const quantityInput = prompt("Enter quantity:");
-        if (quantityInput === null || !quantityInput.trim()) return;
-
-        const quantity = Number(quantityInput);
-        if (!Number.isFinite(quantity) || quantity < 0) {
-            alert("Please enter a valid quantity.");
-            return;
-        }
-
-        const unit = prompt("Enter unit (kg, L, etc.):");
-        if (unit === null || !unit.trim()) return;
-        inventoryItems.push({
-            id: Date.now(),
-            name: name.trim(),
-            quantity: quantity,
-            unit: unit.trim()
+    [nameInput, unitInput, quantityInput].forEach(input => {
+        input.addEventListener("input", () => {
+            input.setCustomValidity("");
+            status.textContent = "";
         });
+    });
+
+    addForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const name = nameInput.value.trim();
+        const unit = unitInput.value.trim();
+        const quantity = quantityInput.valueAsNumber;
+
+        nameInput.setCustomValidity(name ? "" : "Enter an ingredient name.");
+        unitInput.setCustomValidity(unit ? "" : "Enter a unit.");
+        quantityInput.setCustomValidity(
+            Number.isFinite(quantity) && quantity >= 0
+                ? "" : "Enter a valid quantity of zero or greater."
+        );
+        if (!addForm.reportValidity()) return;
+
+        inventoryItems.push({ id: nextId++, name, quantity, unit });
         renderInventory();
+        addForm.reset();
+        status.textContent = `${name} added to inventory.`;
+        nameInput.focus();
     });
 
     inventoryBody.addEventListener("click", (event) => {
