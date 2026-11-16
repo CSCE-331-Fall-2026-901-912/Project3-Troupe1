@@ -15,6 +15,10 @@ const menuListSQL = fs.readFileSync(path.join(__dirname, './queries/menu_list.sq
 const menuAddSQL = fs.readFileSync(path.join(__dirname, './queries/menu_add.sql'), 'utf8');
 const menuEditSQL = fs.readFileSync(path.join(__dirname, './queries/menu_edit.sql'), 'utf8');
 const menuRemoveSQL = fs.readFileSync(path.join(__dirname, './queries/menu_remove.sql'), 'utf8');
+const inventoryListSQL = fs.readFileSync(path.join(__dirname, './queries/inventory_list.sql'), 'utf8');
+const inventoryAddSQL = fs.readFileSync(path.join(__dirname, './queries/inventory_add.sql'), 'utf8');
+const inventoryEditSQL = fs.readFileSync(path.join(__dirname, './queries/inventory_edit.sql'), 'utf8');
+const inventoryRemoveSQL = fs.readFileSync(path.join(__dirname, './queries/inventory_remove.sql'), 'utf8');
 
 router.get('/x-report', async (req, res) => {
     try {
@@ -293,6 +297,31 @@ router.delete('/menu/:id', async (req, res) => {
         res.status(500).json({
             error: 'Failed to remove menu item'
         });
+    }
+});
+
+router.post('/inventory', async (req, res) => {
+    try {
+        const { ingredientName, category, quantity, unit } = req.body;
+        if (
+            typeof ingredientName !== 'string' || !ingredientName.trim() ||
+            typeof category !== 'string' || !category.trim() ||
+            !Number.isSafeInteger(quantity) || quantity < 0 ||
+            typeof unit !== 'string' || !unit.trim()) {
+
+            return res.status(400).json({error: 'Valid inventory information is required'});
+        }
+
+        const idResult = await pool.query('SELECT MAX(IngredientID) AS maxid FROM Inventory');
+        const ingredientID = Number(idResult.rows[0].maxid || 0) + 1;
+        const result = await pool.query(inventoryAddSQL, [ingredientID, ingredientName.trim(), category.trim(), quantity, unit.trim()]);
+        res.status(201).json(result.rows[0]);
+    } catch (error) {
+        console.error('Add Inventory Error:', error);
+        if (error.code === '23505') {
+            return res.status(409).json({error: 'Ingredient ID already exists. Please try again.'});
+        }
+        res.status(500).json({error: 'Failed to add inventory item'});
     }
 });
 
