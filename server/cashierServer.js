@@ -48,6 +48,27 @@ router.get('/popular', async (req, res) => {
     }
 });
 
+// Show today's cashier sales using orders already saved in PostgreSQL.
+// This reads the totals; it does not create or modify any orders.
+router.get('/sales-today', async (req, res) => {
+    try {
+        const result = await pool.query(
+            'SELECT COUNT(*)::int AS orders, COALESCE(SUM(Total), 0) AS sales ' +
+            'FROM OrderHistory ' +
+            "WHERE CustomerName = 'Cashier' " +
+            "AND Date = (NOW() AT TIME ZONE 'America/Chicago')::date"
+        );
+
+        res.json({
+            orders: Number(result.rows[0].orders),
+            sales: Number(result.rows[0].sales)
+        });
+    } catch (error) {
+        console.error('Cashier Sales Error:', error);
+        res.status(500).json({ error: 'Could not load cashier sales' });
+    }
+});
+
 // Save an order submitted from the cashier screen
 router.post('/orders', async (req, res) => {
     const items = req.body && req.body.items;
