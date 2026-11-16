@@ -300,6 +300,18 @@ router.delete('/menu/:id', async (req, res) => {
     }
 });
 
+router.get('/inventory', async (req, res) => {
+    try {
+        const result = await pool.query(inventoryListSQL);
+        res.json(result.rows);
+    } catch (error) {
+        console.error('Inventory List Error:', error);
+        res.status(500).json({
+            error: 'Failed to load inventory'
+        });
+    }
+});
+
 router.post('/inventory', async (req, res) => {
     try {
         const { ingredientName, category, quantity, unit } = req.body;
@@ -322,6 +334,66 @@ router.post('/inventory', async (req, res) => {
             return res.status(409).json({error: 'Ingredient ID already exists. Please try again.'});
         }
         res.status(500).json({error: 'Failed to add inventory item'});
+    }
+});
+
+router.put('/inventory/:id', async (req, res) => {
+    try {
+        const ingredientID = Number(req.params.id);
+        const { ingredientName, category, quantity, unit } = req.body;
+        if (
+            !Number.isSafeInteger(ingredientID) || ingredientID <= 0 ||
+            typeof ingredientName !== 'string' || !ingredientName.trim() ||
+            typeof category !== 'string' || !category.trim() ||
+            !Number.isSafeInteger(quantity) || quantity < 0 ||
+            typeof unit !== 'string' || !unit.trim()) {
+            return res.status(400).json({
+                error: 'Valid inventory information is required'
+            });
+        }
+
+        const result = await pool.query(inventoryEditSQL, [ingredientName.trim(), category.trim(), quantity, unit.trim(), ingredientID]);
+        if (result.rowCount === 0) {
+            return res.status(404).json({
+                error: 'Inventory item not found'
+            });
+        }
+        res.json(result.rows[0]);
+    } catch (error) {
+        console.error('Edit Inventory Error:', error);
+        res.status(500).json({
+            error: 'Failed to edit inventory item'
+        });
+    }
+});
+
+router.delete('/inventory/:id', async (req, res) => {
+    try {
+        const ingredientID = Number(req.params.id);
+        if (!Number.isSafeInteger(ingredientID) || ingredientID <= 0) {
+            return res.status(400).json({
+                error: 'Invalid Ingredient ID'
+            });
+        }
+        const recipeCheck = await pool.query('SELECT 1 FROM Recipe WHERE InventoryID = $1 LIMIT 1', [ingredientID]);
+        if (recipeCheck.rowCount > 0) {
+            return res.status(409).json({
+                error: 'Cannot remove an ingredient used in an existing recipe'
+            });
+        }
+
+        const result = await pool.query(inventoryRemoveSQL, [ingredientID]);
+        if (result.rowCount === 0) {
+            return res.status(404).json({
+                error: 'Inventory item not found'
+            });
+        }
+        res.json({message: 'Inventory item removed successfully'});
+    } catch (error) {
+        console.error('Remove Inventory Error:', error);
+        res.status(500).json({
+            error: 'Failed to remove inventory item'
+        });
     }
 });
 
