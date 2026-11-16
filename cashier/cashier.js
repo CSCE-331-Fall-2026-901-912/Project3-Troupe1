@@ -328,8 +328,6 @@ document.getElementById("checkoutButton").addEventListener("click", async () => 
         updateOrder();
         showCategories();
 
-        alert(`Order #${result.orderId} saved! Total: $${Number(result.total).toFixed(2)}`);
-
     } catch (error) {
         console.error("Cashier checkout error:", error);
         alert("Couldn't save order: " + error.message);
