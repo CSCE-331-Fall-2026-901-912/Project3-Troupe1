@@ -237,11 +237,13 @@ document.getElementById("checkoutButton").addEventListener("click", async () => 
     if (currentOrder.length === 0) return;
 
     const button = document.getElementById("checkoutButton");
+    const addButton = document.getElementById("addToOrderButton");
+
     button.disabled = true;
-    button.textContent = "Sending...";
+    addButton.disabled = true;
+    button.textContent = "Saving...";
 
     try {
-        // Send drink and add-on IDs to the backend
         const response = await fetch("/api/cashier/orders", {
             method: "POST",
             headers: {
@@ -258,21 +260,23 @@ document.getElementById("checkoutButton").addEventListener("click", async () => 
         const result = await response.json();
 
         if (!response.ok) {
-            throw new Error(result.error || "Request failed");
+            throw new Error(result.error || "Could not save order");
         }
 
-        // Step 1 only confirms the backend received the order
-        alert("Backend received " + result.itemCount +
-              " drink(s). This order has not been saved yet.");
+        // Only clear the order after the database confirms it was saved
+        currentOrder = [];
+        updateOrder();
+        showCategories();
 
-        // Do not clear the order until Step 2 saves it
+        alert(`Order #${result.orderId} saved! Total: $${Number(result.total).toFixed(2)}`);
 
     } catch (error) {
         console.error("Cashier checkout error:", error);
-        alert("Couldn't send order: " + error.message);
+        alert("Couldn't save order: " + error.message);
 
     } finally {
         button.textContent = "Checkout";
         button.disabled = currentOrder.length === 0;
+        addButton.disabled = false;
     }
 });
