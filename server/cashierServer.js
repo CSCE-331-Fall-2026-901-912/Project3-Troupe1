@@ -431,4 +431,6 @@ router.post('/orders', async (req, res) => {
     }
 });
 
+router.deductIngredients = deductIngredients;
+
 module.exports = router;
