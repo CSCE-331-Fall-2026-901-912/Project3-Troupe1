@@ -19,6 +19,9 @@ const inventoryListSQL = fs.readFileSync(path.join(__dirname, './queries/invento
 const inventoryAddSQL = fs.readFileSync(path.join(__dirname, './queries/inventory_add.sql'), 'utf8');
 const inventoryEditSQL = fs.readFileSync(path.join(__dirname, './queries/inventory_edit.sql'), 'utf8');
 const inventoryRemoveSQL = fs.readFileSync(path.join(__dirname, './queries/inventory_remove.sql'), 'utf8');
+const dailyReportSQL = fs.readFileSync(path.join(__dirname, './queries/daily_report.sql'), 'utf8');
+const salesReportSQL = fs.readFileSync(path.join(__dirname, './queries/sales_report.sql'), 'utf8');
+const productUsageReportSQL = fs.readFileSync(path.join(__dirname, './queries/product_usage_report.sql'), 'utf8');
 
 router.get('/x-report', async (req, res) => {
     try {
@@ -393,6 +396,73 @@ router.delete('/inventory/:id', async (req, res) => {
         console.error('Remove Inventory Error:', error);
         res.status(500).json({
             error: 'Failed to remove inventory item'
+        });
+    }
+});
+
+router.get('/daily-report', async (req, res) => {
+    try {
+        const selectedDate = req.query.date;
+        if (!selectedDate) {
+            return res.status(400).json({
+                error: 'Date is required'
+            });
+        }
+
+        const result = await pool.query(dailyReportSQL, [selectedDate]);
+        res.json(result.rows);
+    } catch (error) {
+        console.error('Daily Report Error:', error);
+        res.status(500).json({
+            error: 'Failed to generate Daily Report'
+        });
+    }
+});
+
+router.get('/sales-report', async (req, res) => {
+    try {
+        const { startDate, endDate } = req.query;
+        if (!startDate || !endDate) {
+            return res.status(400).json({
+                error: 'Start date and end date are required'
+            });
+        }
+
+        if (startDate > endDate) {
+            return res.status(400).json({
+                error: 'Start date cannot be after end date'
+            });
+        }
+        const result = await pool.query(salesReportSQL, [startDate, endDate]);
+        res.json(result.rows);
+    } catch (error) {
+        console.error('Sales Report Error:', error);
+        res.status(500).json({
+            error: 'Failed to generate Sales Report'
+        });
+    }
+});
+
+router.get('/product-usage-report', async (req, res) => {
+    try {
+        const { startDate, endDate } = req.query;
+        if (!startDate || !endDate) {
+            return res.status(400).json({
+                error: 'Start date and end date are required'
+            });
+        }
+
+        if (startDate > endDate) {
+            return res.status(400).json({
+                error: 'Start date cannot be after end date'
+            });
+        }
+        const result = await pool.query(productUsageReportSQL, [startDate, endDate]);
+        res.json(result.rows);
+    } catch (error) {
+        console.error('Product Usage Report Error:', error);
+        res.status(500).json({
+            error: 'Failed to generate Product Usage Report'
         });
     }
 });
