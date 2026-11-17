@@ -38,11 +38,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 <td></td>
                 <td></td>
                 <td>
-                    <button data-edit-inventory="${item.id}">Edit</button>
-                    <button data-remove-inventory="${item.id}">Remove</button>
+                    <button data-edit-inventory="${item.ingredientid}">Edit</button>
+                    <button data-remove-inventory="${item.ingredientid}">Remove</button>
                 </td>
             `;
-            row.cells[0].textContent = item.name;
+            row.cells[0].textContent = item.ingredientname;
             row.cells[1].textContent = item.quantity;
             row.cells[2].textContent = item.unit;
             inventoryBody.appendChild(row);
@@ -58,12 +58,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     addForm.addEventListener("submit", async (event) => {
         event.preventDefault();
-        const name = nameInput.value.trim();
+        const ingredientName = nameInput.value.trim();
         const category = categoryInput.value.trim();
         const unit = unitInput.value.trim();
         const quantity = quantityInput.valueAsNumber;
 
-        nameInput.setCustomValidity(name ? "" : "Enter an ingredient name.");
+        nameInput.setCustomValidity(ingredientName ? "" : "Enter an ingredient name.");
         categoryInput.setCustomValidity(category ? '' : 'Enter a category.');
         unitInput.setCustomValidity(unit ? "" : "Enter a unit.");
         quantityInput.setCustomValidity(
@@ -102,7 +102,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (editButton) {
             const id = Number(editButton.dataset.editInventory);
-            const item = inventoryItems.find(item => item.id === id);
+            const item = inventoryItems.find(item => item.ingredientid === id);
             if (!item) return;
             renderInventory();
 
@@ -209,5 +209,5 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
     });
-    renderInventory();
+    loadInventory();
 });
