@@ -2,6 +2,7 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const pool = require('./db.js');
+const { deductIngredients } = require('./cashierServer.js');
 
 const router = express.Router();
 
@@ -34,7 +35,7 @@ router.post('/orders', async (req, res) => {
         const addOnIds = Array.isArray(item.addOnIds) ? item.addOnIds.map(Number) : [];
 
         if (!Number.isInteger(menuId) || !Number.isInteger(qty) || qty < 1 || qty > 50 ||
-            !addOnIds.every(Number.isInteger)) {
+            !addOnIds.every(id => Number.isInteger(id) && id > 0 && id !== 100)) {
             return res.status(400).json({ error: 'Invalid order item' });
         }
 
@@ -57,12 +58,17 @@ router.post('/orders', async (req, res) => {
             [menuIds]
         );
         const addOnResult = await client.query(
-            'SELECT AddOnsID, Price FROM AddOn WHERE AddOnsID = ANY($1::int[])',
+            'SELECT AddOnsID, IngredientID, Price FROM AddOn WHERE AddOnsID = ANY($1::int[])',
             [addOnIds]
         );
 
         const menuPrices = new Map(menuResult.rows.map(row => [row.menuitemid, Number(row.price)]));
         const addOnPrices = new Map(addOnResult.rows.map(row => [row.addonsid, Number(row.price)]));
+
+        if (menuPrices.size !== menuIds.length || addOnPrices.size !== addOnIds.length) {
+            await client.query('ROLLBACK');
+            return res.status(400).json({ error: 'Unknown menu item or add-on' });
+        }
 
         let total = 0;
         for (const drink of drinks) {
@@ -72,6 +78,13 @@ router.post('/orders', async (req, res) => {
             }
         }
         total = Math.round(total * 100) / 100;
+
+        await deductIngredients(
+            client,
+            drinks.map(drink => ({ id: drink.menuId, addOnIds: drink.addOnIds })),
+            menuIds,
+            new Map(addOnResult.rows.map(row => [row.addonsid, Number(row.ingredientid)]))
+        );
 
         const ids = await client.query(
             'SELECT COALESCE(MAX(OrderID), 0) + 1 AS orderid, ' +
@@ -93,7 +106,7 @@ router.post('/orders', async (req, res) => {
                 'INSERT INTO OrderItems (ItemID, OrderID, MenuID) VALUES ($1, $2, $3)',
                 [itemId, orderId, drink.menuId]
             );
-            for (const addOnId of drink.addOnIds) {
+            for (const addOnId of drink.addOnIds.length ? drink.addOnIds : [100]) {
                 await client.query(
                     'INSERT INTO OrderItemAddOns (OrderItemID, AddOnID) VALUES ($1, $2)',
                     [itemId, addOnId]
@@ -103,6 +116,12 @@ router.post('/orders', async (req, res) => {
 
         await client.query('COMMIT');
         res.json({ orderId, total });
+    } catch (error) {
+        await client.query('ROLLBACK').catch(() => {});
+        console.error('Order Error:', error);
+        res.status(error.statusCode || 500).json({
+            error: error.statusCode ? error.message : 'Failed to save order'
+        });
     } finally {
         client.release();
     }

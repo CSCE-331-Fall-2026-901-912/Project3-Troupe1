@@ -245,8 +245,13 @@ document.getElementById("checkoutButton").addEventListener("click", async () => 
         items: cart.map(item => ({ id: item.id, qty: item.qty, addOnIds: item.addOnIds }))
       })
     });
-    if (!response.ok) throw new Error("Request failed");
     const order = await response.json();
+    if (!response.ok) {
+      message.textContent = response.status === 409
+        ? "Sorry, some ingredients for your order are sold out."
+        : "We couldn't place your order. Please try again.";
+      return;
+    }
 
     cart = [];
     message.textContent = "";
