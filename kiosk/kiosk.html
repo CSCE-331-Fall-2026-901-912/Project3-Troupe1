@@ -15,23 +15,36 @@
         <nav class="categories">
           <div class="brand">
             The Jade Turtle
-            <small>Customer Kiosk</small>
+            <small data-i18n="Customer Kiosk">Customer Kiosk</small>
             <large></large>
-            <a href="../hub/hub.html" class="hub-button">Back to Hub</a>
+            <a href="../hub/hub.html" class="hub-button" data-i18n="Back to Hub">Back to Hub</a>
           </div>
-          <button class="category" data-category="Milk Tea">Milk Tea</button>
-          <button class="category" data-category="Fruit Tea">Fruit Tea</button>
-          <button class="category" data-category="Coffee">Coffee</button>
-          <button class="category" data-category="Smoothie">Smoothie</button>
-          <button class="category" data-category="Seasonal Drink">Seasonal Drink</button>
-          <button class="category" data-category="Favorites">Favorites</button>
+          <button class="category" data-category="Milk Tea" data-i18n="Milk Tea">Milk Tea</button>
+          <button class="category" data-category="Fruit Tea" data-i18n="Fruit Tea">Fruit Tea</button>
+          <button class="category" data-category="Coffee" data-i18n="Coffee">Coffee</button>
+          <button class="category" data-category="Smoothie" data-i18n="Smoothie">Smoothie</button>
+          <button class="category" data-category="Seasonal" data-i18n="Seasonal Drink">Seasonal Drink</button>
+          <button class="category" data-category="Favorites" data-i18n="Favorites">Favorites</button>
         </nav>
         <main class="menu-content">
+          <div class="language-bar" id="languageBar">
+            <span id="languageNote" role="status"></span>
+            <div class="language-menu">
+              <button class="language-toggle" id="languageToggle" aria-label="Language" aria-haspopup="true" aria-expanded="false">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18a14 14 0 0 1 0-18"/></svg>
+              </button>
+              <ul class="language-list" id="languageList" hidden>
+                <li><button class="lang active" data-lang="en">English</button></li>
+                <li><button class="lang" data-lang="es">Español</button></li>
+                <li><button class="lang" data-lang="fr">Français</button></li>
+              </ul>
+            </div>
+          </div>
           <section class="weather-panel" aria-labelledby="weatherHeading">
-            <h1 id="weatherHeading">Recommended for Today</h1>
+            <h1 id="weatherHeading" data-i18n="Recommended for Today">Recommended for Today</h1>
             <p id="weatherStatus" role="status">Checking College Station weather…</p>
             <div class="weather-picks" id="weatherPicks"></div>
-            <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Weather data by Open-Meteo</a>
+            <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer" data-i18n="Weather data by Open-Meteo">Weather data by Open-Meteo</a>
           </section>
           <h2 class="menu-heading" id="categoryHeading">Milk Tea</h2>
           <div class="items" id="drinkGrid"></div>
@@ -42,38 +55,38 @@
           <strong id="cartCount">Cart (0)</strong>
           <span id="cartBarTotal">$0.00</span>
         </div>
-        <button class="primary" id="cartLink">View Cart</button>
+        <button class="primary" id="cartLink" data-i18n="View Cart">View Cart</button>
       </div>
     </section>
 
     <section class="screen page" id="addonScreen">
       <h1 id="drinkName"></h1>
       <p id="basePrice"></p>
-      <h2>Add-Ons</h2>
+      <h2 data-i18n="Add-Ons">Add-Ons</h2>
       <div class="addon-list" id="addonList"></div>
       <strong class="page-total" id="customTotal"></strong>
       <div class="actions">
-        <button class="secondary" id="addonBack">Back</button>
-        <button class="primary" id="addToCart">Add to Cart</button>
+        <button class="secondary" id="addonBack" data-i18n="Back">Back</button>
+        <button class="primary" id="addToCart" data-i18n="Add to Cart">Add to Cart</button>
       </div>
     </section>
 
     <section class="screen page" id="cartScreen">
-      <h1>Your Cart</h1>
+      <h1 data-i18n="Your Cart">Your Cart</h1>
       <div class="cart-list" id="cartList"></div>
       <strong class="page-total" id="cartTotal"></strong>
       <p class="checkout-message" id="checkoutMessage" role="status"></p>
       <div class="actions">
-        <button class="secondary" id="keepShopping">Keep Shopping</button>
-        <button class="primary" id="checkoutButton">Checkout</button>
+        <button class="secondary" id="keepShopping" data-i18n="Keep Shopping">Keep Shopping</button>
+        <button class="primary" id="checkoutButton" data-i18n="Checkout">Checkout</button>
       </div>
     </section>
 
     <section class="screen page" id="confirmScreen">
-      <h1>Thank You!</h1>
+      <h1 data-i18n="Thank You!">Thank You!</h1>
       <p id="confirmMessage"></p>
       <div class="actions">
-        <button class="primary" id="newOrder">New Order</button>
+        <button class="primary" id="newOrder" data-i18n="New Order">New Order</button>
       </div>
     </section>
   </div>
