@@ -411,3 +411,74 @@ button.remove:hover {
   min-height: 1.2em;
   color: var(--muted);
 }
+
+.language-bar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.language-menu {
+  position: relative;
+}
+
+.language-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--border-strong);
+  border-radius: 50%;
+  background: var(--white);
+  color: var(--jade-dark);
+  cursor: pointer;
+}
+
+.language-toggle:hover,
+.language-toggle[aria-expanded="true"] {
+  background: var(--jade-light);
+}
+
+.language-list {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 10;
+  min-width: 140px;
+  margin-top: 6px;
+  padding: 4px;
+  list-style: none;
+  background: var(--white);
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+}
+
+.lang {
+  display: block;
+  width: 100%;
+  padding: 10px 12px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--ink);
+  font-size: 0.95rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.lang:hover {
+  background: var(--jade-light);
+}
+
+.lang.active {
+  background: var(--jade);
+  color: var(--white);
+}
+
+#languageNote {
+  color: var(--muted);
+  font-size: 0.85rem;
+}

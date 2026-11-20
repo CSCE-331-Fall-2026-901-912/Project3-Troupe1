@@ -4,9 +4,123 @@ const path = require('path');
 const pool = require('./db.js');
 const { deductIngredients } = require('./cashierServer.js');
 
+const kioskStrings = require('./kioskStrings.json');
+
 const router = express.Router();
 
+const translationLanguages = new Set(['es', 'fr']);
+const translationCache = new Map();
+const pendingTranslations = new Map();
+
+async function translateWithGoogle(texts, target) {
+    const response = await fetch('https://translation.googleapis.com/language/translate/v2', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-goog-api-key': process.env.GOOGLE_TRANSLATE_API_KEY
+        },
+        body: JSON.stringify({ q: texts, source: 'en', target, format: 'text' })
+    });
+
+    if (!response.ok) {
+        throw new Error('Google Translate returned ' + response.status);
+    }
+
+    const data = await response.json();
+    return data.data.translations.map(item => item.translatedText);
+}
+
+async function translateAll(texts, lang) {
+    if (!translationCache.has(lang)) {
+        translationCache.set(lang, new Map());
+    }
+
+    const cache = translationCache.get(lang);
+    const missing = texts.filter(text => !cache.has(text));
+
+    for (let i = 0; i < missing.length; i += 100) {
+        const chunk = missing.slice(i, i + 100);
+        const translated = await translateWithGoogle(chunk, lang);
+        chunk.forEach((text, index) => cache.set(text, translated[index]));
+    }
+
+    return Object.fromEntries(texts.map(text => [text, cache.get(text)]));
+}
+
+router.get('/translations', async (req, res) => {
+    const lang = req.query.lang;
+
+    if (!translationLanguages.has(lang)) {
+        return res.status(400).json({ error: 'Unsupported language' });
+    }
+
+    if (!process.env.GOOGLE_TRANSLATE_API_KEY) {
+        return res.status(503).json({ error: 'Translation is not configured' });
+    }
+
+    try {
+        const names = await pool.query(
+            'SELECT MenuItemName AS text FROM MenuItem ' +
+            'UNION SELECT Name FROM AddOn WHERE AddOnsID <> 100'
+        );
+        const texts = [...new Set([...kioskStrings, ...names.rows.map(row => row.text)])];
+
+        while (pendingTranslations.has(lang)) {
+            await pendingTranslations.get(lang).catch(() => {});
+        }
+
+        const job = translateAll(texts, lang);
+        pendingTranslations.set(lang, job);
+
+        try {
+            res.json({ translations: await job });
+        } finally {
+            pendingTranslations.delete(lang);
+        }
+    } catch (error) {
+        console.error('Translation Error:', error);
+        res.status(502).json({ error: 'Failed to translate' });
+    }
+});
+
 const topDrinksSQL = fs.readFileSync(path.join(__dirname, 'queries', 'top_drinks.sql'), 'utf8');
+
+router.get('/menu', async (req, res) => {
+    try {
+        const menuResult = await pool.query(
+            'SELECT MenuItemID AS id, MenuItemName AS name, Category AS category, Price AS price ' +
+            'FROM MenuItem ORDER BY MenuItemID'
+        );
+        const addOnResult = await pool.query(
+            'SELECT a.AddOnsID AS id, a.Name AS name, a.Price AS price, ' +
+            'COALESCE(ARRAY_AGG(DISTINCT r.MenuItemID) FILTER (WHERE r.MenuItemID IS NOT NULL), ' +
+            "'{}') AS menuitemids " +
+            'FROM AddOn a LEFT JOIN Recipe r ON r.InventoryID = a.IngredientID ' +
+            "AND LOWER(r.UsageType) = 'optional' " +
+            'WHERE a.AddOnsID <> 100 GROUP BY a.AddOnsID, a.Name, a.Price ORDER BY a.AddOnsID'
+        );
+
+        res.json({
+            menuItems: menuResult.rows.map(row => ({
+                id: row.id,
+                name: row.name,
+                category: row.category,
+                price: Number(row.price)
+            })),
+            addOns: addOnResult.rows.map(row => ({
+                id: row.id,
+                name: row.name,
+                price: Number(row.price),
+                menuItemIds: row.menuitemids
+            }))
+        });
+    } catch (error) {
+        console.error('Kiosk Menu Error:', error);
+        res.status(500).json({
+            error: 'Failed to load menu'
+        });
+    }
+});
 
 router.get('/top-drinks', async (req, res) => {
     try {
