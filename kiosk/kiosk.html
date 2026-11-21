@@ -46,6 +46,8 @@
             <div class="weather-picks" id="weatherPicks"></div>
             <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer" data-i18n="Weather data by Open-Meteo">Weather data by Open-Meteo</a>
           </section>
+          <button type="button" id="textAssistanceToggle">Text Assistance: OFF</button>
+          <p class="assistance-message" id="menuAssistance" hidden></p>
           <h2 class="menu-heading" id="categoryHeading">Milk Tea</h2>
           <div class="items" id="drinkGrid"></div>
         </main>
@@ -60,6 +62,7 @@
     </section>
 
     <section class="screen page" id="addonScreen">
+      <p class="assistance-message" id="addonAssistance" hidden></p>
       <h1 id="drinkName"></h1>
       <p id="basePrice"></p>
       <h2 data-i18n="Add-Ons">Add-Ons</h2>
@@ -72,6 +75,7 @@
     </section>
 
     <section class="screen page" id="cartScreen">
+      <p class="assistance-message" id="cartAssistance" hidden></p>
       <h1 data-i18n="Your Cart">Your Cart</h1>
       <div class="cart-list" id="cartList"></div>
       <strong class="page-total" id="cartTotal"></strong>
@@ -83,6 +87,7 @@
     </section>
 
     <section class="screen page" id="confirmScreen">
+      <p class="assistance-message" id="confirmAssistance" hidden></p>
       <h1 data-i18n="Thank You!">Thank You!</h1>
       <p id="confirmMessage"></p>
       <div class="actions">

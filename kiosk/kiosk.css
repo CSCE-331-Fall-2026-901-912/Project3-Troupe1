@@ -482,3 +482,35 @@ button.remove:hover {
   color: var(--muted);
   font-size: 0.85rem;
 }
+
+#textAssistanceToggle {
+  padding: 12px 16px;
+  margin: 12px 0;
+  border: 2px solid var(--jade);
+  border-radius: 8px;
+  background: var(--white);
+  color: var(--jade);
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#textAssistanceToggle.active {
+  background: var(--jade);
+  color: var(--white);
+}
+
+.assistance-message {
+  padding: 16px;
+  margin: 12px 0;
+  border: 2px solid var(--jade);
+  border-radius: 10px;
+  background: var(--jade-light);
+  color: var(--ink);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.assistance-message[hidden] {
+  display: none;
+}
