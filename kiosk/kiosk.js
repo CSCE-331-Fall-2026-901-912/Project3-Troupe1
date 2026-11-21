@@ -18,8 +18,15 @@ let cart = [];
 let favoriteItems = [];
 let translations = {};
 let weatherState = "loading";
+let textAssistanceMode = false;
 
 const categoryLabels = { Seasonal: "Seasonal Drink" };
+const assistanceMessages = {
+  menu: "Step 1: Select a drink category, then choose your preferred drink from the menu.",
+  addon: "Step 2: Choose any additional toppings. Check the total price before adding your drink to the cart.",
+  cart: "Step 3: Review your drinks, quantities, and total price. Select Checkout when you are ready.",
+  confirm: "Your order has been received. Please keep your order number and use it to identify your order at the pickup counter."
+};
 
 function t(text) {
   return translations[text] || text;
@@ -67,6 +74,7 @@ function showScreen(name) {
   Object.keys(screens).forEach(key => {
     screens[key].style.display = key === name ? "flex" : "none";
   });
+  updateAssistanceMessage(name);
 }
 
 function cartTotal() {
@@ -292,6 +300,21 @@ document.getElementById("checkoutButton").addEventListener("click", async () => 
   }
 });
 
+document.getElementById("textAssistanceToggle").addEventListener("click", () => {
+    textAssistanceMode = !textAssistanceMode;
+
+    const button = document.getElementById("textAssistanceToggle");
+
+    button.textContent = textAssistanceMode
+        ? "Text Assistance: ON"
+        : "Text Assistance: OFF";
+
+    button.classList.toggle("active", textAssistanceMode);
+    button.setAttribute("aria-pressed", String(textAssistanceMode));
+
+    updateAssistanceMessage("menu");
+});
+
 document.getElementById("newOrder").addEventListener("click", () => showCategory(currentCategory));
 document.getElementById("addonBack").addEventListener("click", () => showCategory(currentCategory));
 document.getElementById("keepShopping").addEventListener("click", () => showCategory(currentCategory));
@@ -437,6 +460,22 @@ async function initializeWeather() {
   } finally {
     clearTimeout(timeout);
   }
+}
+
+function updateAssistanceMessage(screenName) {
+  const messages = {
+    menu: document.getElementById("menuAssistance"),
+    addon: document.getElementById("addonAssistance"),
+    cart: document.getElementById("cartAssistance"),
+    confirm: document.getElementById("confirmAssistance")
+  };
+
+  Object.keys(messages).forEach(key => {
+    messages[key].hidden = !textAssistanceMode || key !== screenName;
+    if (textAssistanceMode && key === screenName) {
+      messages[key].textContent = assistanceMessages[key];
+    }
+  });
 }
 
 // Fetch once per page load; keep recommendations stable while a customer orders.
