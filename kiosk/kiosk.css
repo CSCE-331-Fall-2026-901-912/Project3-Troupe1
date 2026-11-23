@@ -514,3 +514,178 @@ button.remove:hover {
 .assistance-message[hidden] {
   display: none;
 }
+
+#highContrastToggle {
+    padding: 12px 16px;
+    margin: 12px 0;
+    border: 2px solid var(--jade);
+    border-radius: 8px;
+    background: var(--white);
+    color: var(--jade);
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#highContrastToggle.active {
+    background: var(--jade);
+    color: var(--white);
+}
+
+body.high-contrast {
+    --jade: #ffeb00;
+    --jade-dark: #000000;
+    --jade-hover: #ffeb00;
+    --jade-light: #000000;
+    --ink: #ffffff;
+    --muted: #ffffff;
+    --page: #000000;
+    --white: #000000;
+    --border: #ffffff;
+    --border-strong: #ffffff;
+
+    background: #000000;
+    color: #ffffff;
+}
+
+.high-contrast .kiosk,
+.high-contrast .screen,
+.high-contrast .menu-content,
+.high-contrast .page,
+.high-contrast .categories {
+    background: #000000;
+    color: #ffffff;
+}
+
+.high-contrast .brand-mark {
+    display: none;
+}
+
+.high-contrast .brand,
+.high-contrast .brand small,
+.high-contrast .brand large,
+.high-contrast .menu-heading {
+    color: #ffffff;
+}
+
+.high-contrast .category {
+    color: #ffffff;
+    border: 1px solid #ffffff;
+}
+
+.high-contrast .category.active,
+.high-contrast .category:hover {
+    background: #ffeb00;
+    color: #000000;
+}
+
+.high-contrast .item,
+.high-contrast .addon-option,
+.high-contrast .cart-item {
+    background: #000000;
+    color: #ffffff;
+    border: 2px solid #ffffff;
+}
+
+.high-contrast .item:hover,
+.high-contrast .item:focus-visible {
+    background: #ffeb00;
+    color: #000000;
+}
+
+.high-contrast .page h1,
+.high-contrast .page h2,
+.high-contrast .page p,
+.high-contrast .page-total,
+.high-contrast .cart-text,
+.high-contrast .cart-bar span {
+    color: #ffffff;
+}
+
+.high-contrast .weather-panel {
+    background: #000000;
+    border: 2px solid #ffffff;
+}
+
+.high-contrast .weather-panel h1,
+.high-contrast .weather-panel a,
+.high-contrast .weather-panel p {
+    color: #ffffff;
+}
+
+.high-contrast button.primary,
+.high-contrast button.secondary,
+.high-contrast button.remove,
+.high-contrast .qty-button,
+.high-contrast .hub-button,
+.high-contrast #addonBack {
+    background: #ffeb00;
+    color: #000000;
+    border: 2px solid #ffffff;
+}
+
+.high-contrast button.primary:hover,
+.high-contrast button.secondary:hover,
+.high-contrast button.remove:hover,
+.high-contrast .qty-button:hover,
+.high-contrast #addonBack:hover {
+    background: #ffffff;
+    color: #000000;
+}
+
+.high-contrast .cart-bar {
+    background: #000000;
+    color: #ffffff;
+    border-top: 2px solid #ffffff;
+}
+
+.high-contrast .language-toggle,
+.high-contrast .language-list {
+    background: #000000;
+    color: #ffffff;
+    border: 2px solid #ffffff;
+}
+
+.high-contrast .lang {
+    color: #ffffff;
+}
+
+.high-contrast .lang.active,
+.high-contrast .lang:hover {
+    background: #ffeb00;
+    color: #000000;
+}
+
+.high-contrast .assistance-message {
+    background: #000000;
+    color: #ffffff;
+    border: 2px solid #ffeb00;
+}
+
+.high-contrast #textAssistanceToggle,
+.high-contrast #highContrastToggle {
+    background: #000000;
+    color: #ffffff;
+    border: 2px solid #ffffff;
+}
+
+.high-contrast #textAssistanceToggle.active,
+.high-contrast #highContrastToggle.active {
+    background: #ffeb00;
+    color: #000000;
+}
+
+.high-contrast button:focus-visible,
+.high-contrast a:focus-visible,
+.high-contrast .item:focus-visible {
+    outline: 3px solid #ffeb00;
+    outline-offset: 3px;
+}
+
+.high-contrast {
+    font-size: 125%;
+}
+
+.high-contrast button {
+    min-height: 48px;
+}
