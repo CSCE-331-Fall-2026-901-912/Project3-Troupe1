@@ -683,9 +683,45 @@ body.high-contrast {
 }
 
 .high-contrast {
-    font-size: 125%;
+    font-size: 150%;
 }
 
 .high-contrast button {
     min-height: 48px;
+}
+
+.high-contrast .item,
+.high-contrast .category,
+.high-contrast .addon-option,
+.high-contrast button {
+    transition: transform 0.2s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .high-contrast .item:hover,
+    .high-contrast .category:hover,
+    .high-contrast .addon-option:hover,
+    .high-contrast button:hover {
+        transform: scale(1.15);
+        position: relative;
+        z-index: 10;
+    }
+}
+
+.high-contrast .item:focus-visible,
+.high-contrast .category:focus-visible,
+.high-contrast .addon-option:focus-visible,
+.high-contrast button:focus-visible {
+    transform: scale(1.15);
+    position: relative;
+    z-index: 10;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .high-contrast .item,
+    .high-contrast .category,
+    .high-contrast .addon-option,
+    .high-contrast button {
+        transition: none;
+    }
 }
