@@ -1,89 +1,157 @@
 document.addEventListener("DOMContentLoaded", () => {
-    let employees = [
-        { id: 101, name: "Alex Kim", position: "Manager" },
-        { id: 102, name: "Jamie Lee", position: "Cashier" },
-        { id: 103, name: "Taylor Park", position: "Cashier" }
-    ];
-
-    const employeeBody = document.getElementById("employeeBody");
+    loadEmployees();
     const addButton = document.querySelector('[data-add="employee"]');
+    addButton.addEventListener('click', addEmployee);
+});
 
-    function renderEmployees() {
-        employeeBody.innerHTML = "";
-        employees.forEach((employee) => {
-            const row = document.createElement("tr");
-            const idCell = document.createElement("td");
-            idCell.textContent = employee.id;
+async function loadEmployees() {
+    const employeeBody = document.getElementById("employeeBody");
+    try {
+        const response = await fetch('/api/manager/employees');
+        if (!response.ok) throw new Error('Failed to load employees');
+        const employees = await response.json();
 
-            const nameCell = document.createElement("td");
-            nameCell.textContent = employee.name;
+        employeeBody.replaceChildren();
+        employees.forEach(employee => {
+            const row = document.createElement('tr');
 
-            const positionCell = document.createElement("td");
+            const idCell = document.createElement('td');
+            idCell.textContent = employee.employeeid;
+
+            const nameCell = document.createElement('td');
+            nameCell.textContent = `${employee.firstname} ${employee.lastname}`;
+
+            const positionCell = document.createElement('td');
             positionCell.textContent = employee.position;
 
-            const actionCell = document.createElement("td");
-            
-            const editButton = document.createElement("button");
-            editButton.textContent = "Edit";
-            editButton.dataset.editEmployee = employee.id;
+            const actionCell = document.createElement('td');
 
-            const removeButton = document.createElement("button");
-            removeButton.textContent = "Remove";
-            removeButton.dataset.removeEmployee = employee.id;
-            
-            actionCell.append(editButton, removeButton);
-            row.append(idCell, nameCell, positionCell, actionCell);
+            const editButton = document.createElement('button');
+            editButton.textContent = 'Edit';
+            editButton.className = 'small-btn';
+            editButton.addEventListener('click', () => {editEmployee(employee);});
+
+            const removeButton = document.createElement('button');
+            removeButton.textContent = 'Remove';
+            removeButton.className = 'small-btn danger';
+            removeButton.addEventListener('click', () => {removeEmployee(employee.employeeid);});
+
+            actionCell.appendChild(editButton);
+            actionCell.appendChild(removeButton);
+
+            row.appendChild(idCell);
+            row.appendChild(nameCell);
+            row.appendChild(positionCell);
+            row.appendChild(actionCell);
+
             employeeBody.appendChild(row);
         });
+    } catch (error) {
+        console.error('Employee Error:', error);
+    }
+}
+
+async function addEmployee() {
+    const employeeID = Number(prompt('Enter Employee ID:'));
+    if (!Number.isInteger(employeeID) || employeeID <= 0) {
+        alert('Invalid Employee ID.');
+        return;
     }
 
-    addButton.addEventListener("click", () => {
-        const name = prompt("Enter employee name:");
-        if (name === null || !name.trim()) return;
+    const firstName = prompt('Enter First Name:');
+    if (firstName === null) return;
+    const lastName = prompt('Enter Last Name:');
+    if (lastName === null) return;
+    const position = prompt('Enter Position:');
+    if (position === null) return;
+    if (!firstName.trim() || !lastName.trim() || !position.trim()) {
+        alert('All fields are required.');
+        return;
+    }
 
-        const position = prompt("Enter position (Manager/Cashier):");
-        if (position === null || !position.trim()) return;
-
-        const newId = Math.max(100, ...employees.map(emp => emp.id)) + 1;
-        employees.push({
-            id: newId,
-            name: name.trim(),
-            position: position.trim()
+    try {
+        const response = await fetch('/api/manager/employees', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({employeeID, firstName, lastName, position})
         });
-        renderEmployees();
-    });
 
-    employeeBody.addEventListener("click", (event) => {
-        const editButton = event.target.closest("[data-edit-employee]");
-        const removeButton = event.target.closest("[data-remove-employee]");
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.error || 'Failed to add employee');
+        }
 
-        if (editButton) {
-            const id = Number(editButton.dataset.editEmployee);
-            const employee = employees.find(emp => emp.id === id);
-            if (!employee) return;
+        alert('Employee added successfully.');
+        await loadEmployees();
+    } catch (error) {
+        console.error('Add Employee Error:', error);
+        alert(error.message);
+    }
+}
 
-            const name = prompt("Edit employee name:", employee.name);
-            if (name === null) return;
+async function removeEmployee(employeeID) {
+    if (!confirm('Are you sure you want to remove this employee?')) return;
 
-            const position = prompt("Edit position:", employee.position);
-            if (position === null) return;
-            if (!name.trim() || !position.trim()) {
-                alert("Employee name and position cannot be empty.");
-                return;
+    try {
+        const response = await fetch(
+            `/api/manager/employees/${employeeID}`,
+            {
+                method: 'DELETE'
             }
+        );
 
-            employee.name = name.trim();
-            employee.position = position.trim();
-            renderEmployees();
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.error || 'Failed to remove employee');
         }
 
-        if (removeButton) {
-            const id = Number(removeButton.dataset.removeEmployee);
-            if (!confirm("Remove this employee?")) return;
+        alert('Employee removed successfully.');
+        await loadEmployees();
+    } catch (error) {
+        console.error('Remove Employee Error:', error);
+        alert(error.message);
+    }
+}
 
-            employees = employees.filter(emp => emp.id !== id);
-            renderEmployees();
+async function editEmployee(employee) {
+    const firstName = prompt('Enter First Name:', employee.firstname);
+    if (firstName === null) return;
+
+    const lastName = prompt('Enter Last Name:', employee.lastname);
+    if (lastName === null) return;
+
+    const position = prompt('Enter Position:', employee.position);
+    if (position === null) return;
+
+    if (!firstName.trim() || !lastName.trim() || !position.trim()) {
+        alert('All fields are required.');
+        return;
+    }
+
+    try {
+        const response = await fetch(
+            `/api/manager/employees/${employee.employeeid}`,
+            {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    firstName,
+                    lastName,
+                    position
+                })
+            }
+        );
+
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.error || 'Failed to edit employee');
         }
-    });
-    renderEmployees();
-});
+        alert('Employee updated successfully.');
+        await loadEmployees();
+    } catch (error) {
+        console.error('Edit Employee Error:', error);
+        alert(error.message);
+    }
+}

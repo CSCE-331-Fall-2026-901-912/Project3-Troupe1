@@ -1,89 +1,206 @@
-document.addEventListener("DOMContentLoaded", () => {
-    let menuItems = [
-        { id: 1, name: "Classic Milk Tea", category: "Milk Tea", price: 5.25 },
-        { id: 2, name: "Taro Milk Tea", category: "Milk Tea", price: 5.50 },
-        { id: 3, name: "Matcha Latte", category: "Specialty", price: 5.75 },
-        { id: 4, name: "Mango Fruit Tea", category: "Fruit Tea", price: 5.50 }
-    ];
-
-    const menuBody = document.getElementById("menuBody");
+document.addEventListener('DOMContentLoaded', () => {
+    loadMenuItems();
     const addButton = document.querySelector('[data-add="menu"]');
+    addButton.addEventListener('click', addMenuItem);
+});
 
-    function renderMenu() {
-        menuBody.innerHTML = "";
-        menuItems.forEach((item) => {
-            const row = document.createElement("tr");
-            row.innerHTML = `
-                <td>${item.name}</td>
-                <td>${item.category}</td>
-                <td>$${item.price.toFixed(2)}</td>
-                <td>
-                    <button data-edit="${item.id}">Edit</button>
-                    <button data-remove="${item.id}">Remove</button>
-                </td>
-            `;
+async function loadMenuItems() {
+    const menuBody = document.getElementById('menuBody');
+    try {
+        const response = await fetch('/api/manager/menu');
+        if (!response.ok) {
+            throw new Error('Failed to load menu items');
+        }
+
+        const menuItems = await response.json();
+
+        menuBody.replaceChildren();
+
+        menuItems.forEach(item => {
+            const row = document.createElement('tr');
+
+            const nameCell = document.createElement('td');
+            nameCell.textContent = item.menuitemname;
+
+            const categoryCell = document.createElement('td');
+            categoryCell.textContent = item.category;
+
+            const priceCell = document.createElement('td');
+            priceCell.textContent = `$${Number(item.price).toFixed(2)}`;
+
+            const actionCell = document.createElement('td');
+
+            const editButton = document.createElement('button');
+            editButton.textContent = 'Edit';
+            editButton.className = 'small-btn';
+            editButton.addEventListener('click', () => {
+                editMenuItem(item);
+            });
+            
+            const removeButton = document.createElement('button');
+            removeButton.textContent = 'Remove';
+            removeButton.className = 'small-btn danger';
+            removeButton.addEventListener('click', () => {
+                removeMenuItem(item.menuitemid);
+            });
+
+            actionCell.appendChild(editButton);
+            actionCell.appendChild(removeButton);
+
+            row.appendChild(nameCell);
+            row.appendChild(categoryCell);
+            row.appendChild(priceCell);
+            row.appendChild(actionCell);
+
             menuBody.appendChild(row);
         });
+
+    } catch (error) {
+        console.error('Menu Error:', error);
+    }
+}
+
+async function addMenuItem() {
+    const idInput = prompt('Enter Menu Item ID:');
+    if (idInput === null) return;
+
+    const menuItemID = Number(idInput);
+    if (!Number.isSafeInteger(menuItemID) || menuItemID <= 0) {
+        alert('Invalid Menu Item ID.');
+        return;
     }
 
-    addButton.addEventListener("click", () => {
-        const name = prompt("Enter menu item name:");
-        if (!name || !name.trim()) return;
-        const category = prompt("Enter category:");
-        if (!category || !category.trim()) return;
-        const priceInput = prompt("Enter price:");
-        if (priceInput === null || priceInput.trim() === "") return;
+    const menuItemName = prompt('Enter Menu Item Name:');
+    if (menuItemName === null) return;
 
-        const price = Number(priceInput);
-        if (!Number.isFinite(price) || price < 0) {
-            alert("Please enter a valid price.");
-            return;
-        }
-        menuItems.push({
-            id: Date.now(),
-            name: name.trim(),
-            category: category.trim(),
-            price: price
+    const category = prompt('Enter Category:');
+    if (category === null) return;
+
+    const ingredientList = prompt('Enter Ingredient List:');
+    if (ingredientList === null) return;
+
+    const priceInput = prompt('Enter Price:');
+    if (priceInput === null) return;
+
+    const price = Number(priceInput);
+    if (!menuItemName.trim() || !category.trim() 
+        || !Number.isFinite(price) || priceInput.trim() === '' || price < 0) {
+        alert('Invalid menu item information.');
+        return;
+    }
+    try {
+        const response = await fetch('/api/manager/menu', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                menuItemID,
+                category,
+                menuItemName,
+                ingredientList,
+                price
+            })
         });
-        renderMenu();
-    });
 
-    menuBody.addEventListener("click", (event) => {
-        const editButton = event.target.closest("[data-edit]");
-        const removeButton = event.target.closest("[data-remove]");
-        if (editButton) {
-            const id = Number(editButton.dataset.edit);
-            const item = menuItems.find(item => item.id === id);
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.error || 'Failed to add menu item');
+        }
+        alert('Menu item added successfully.');
+        await loadMenuItems();
+    } catch (error) {
+        console.error('Add Menu Error:', error);
+        alert(error.message);
+    }
+}
 
-            if (!item) return;
-            const name = prompt("Edit item name:", item.name);
-            if (name === null) return;
-            const category = prompt("Edit category:", item.category);
-            if (category === null) return;
-            const priceInput = prompt("Edit price:", item.price);
-            if (priceInput === null) return;
+async function editMenuItem(item) {
+    const menuItemName = prompt(
+        'Enter Menu Item Name:',
+        item.menuitemname
+    );
+    if (menuItemName === null) return;
 
-            const price = Number(priceInput);
-            if (!name.trim() || !category.trim() ||
-                priceInput.trim() === "" ||
-                !Number.isFinite(price) || price < 0) {
-                alert("Invalid menu information.");
-                return;
+    const category = prompt(
+        'Enter Category:',
+        item.category
+    );
+    if (category === null) return;
+
+    const ingredientList = prompt(
+        'Enter Ingredient List:',
+        item.ingredientlist || ''
+    );
+    if (ingredientList === null) return;
+
+    const priceInput = prompt(
+        'Enter Price:',
+        item.price
+    );
+    if (priceInput === null) return;
+
+    const price = Number(priceInput);
+
+    if (!menuItemName.trim() || !category.trim() ||
+        !Number.isFinite(price) || priceInput.trim() === '' || price < 0) {
+        alert('Invalid menu item information.');
+        return;
+    }
+    try {
+        const response = await fetch(
+            `/api/manager/menu/${item.menuitemid}`,
+            {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    category,
+                    menuItemName,
+                    ingredientList,
+                    price
+                })
             }
+        );
 
-            item.name = name.trim();
-            item.category = category.trim();
-            item.price = price;
-            renderMenu();
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.error || 'Failed to edit menu item');
         }
 
-        if (removeButton) {
-            const id = Number(removeButton.dataset.remove);
-            if (!confirm("Remove this menu item?")) return;
+        alert('Menu item updated successfully.');
+        await loadMenuItems();
 
-            menuItems = menuItems.filter(item => item.id !== id);
-            renderMenu();
+    } catch (error) {
+        console.error('Edit Menu Error:', error);
+        alert(error.message);
+    }
+}
+
+async function removeMenuItem(menuItemID) {
+    if (!confirm('Are you sure you want to remove this menu item?')) {
+        return;
+    }
+
+    try {
+        const response = await fetch(
+            `/api/manager/menu/${menuItemID}`,
+            {
+                method: 'DELETE'
+            }
+        );
+
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.error || 'Failed to remove menu item');
         }
-    });
-    renderMenu();
-});
+
+        alert('Menu item removed successfully.');
+        await loadMenuItems();
+
+    } catch (error) {
+        console.error('Remove Menu Error:', error);
+        alert(error.message);
+    }
+}

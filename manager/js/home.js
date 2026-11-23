@@ -3,10 +3,19 @@ document.addEventListener("DOMContentLoaded", () => {
     loadSalesCategory();
 });
 
+function getTodayDate() {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+}
+
 async function loadXReport() {
     const output = document.getElementById('xOutput');
     try {
-        const date = '2025-09-26';
+        const date = getTodayDate();
         const response = await fetch(`/api/manager/x-report?date=${date}`);
         if (!response.ok) throw new Error('Failed to load X-Report');
 
@@ -47,7 +56,7 @@ async function loadSalesCategory() {
     const pie = document.querySelector('.pie');
     const legend = document.querySelector('.legend');
     try {
-        const date = '2025-09-26';
+        const date = getTodayDate();
         const response = await fetch(`/api/manager/sales-category?date=${date}`);
         if (!response.ok) throw new Error('Failed to load sales categories');
 

@@ -411,3 +411,281 @@ button.remove:hover {
   min-height: 1.2em;
   color: var(--muted);
 }
+
+.language-bar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.language-menu {
+  position: relative;
+}
+
+.language-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--border-strong);
+  border-radius: 50%;
+  background: var(--white);
+  color: var(--jade-dark);
+  cursor: pointer;
+}
+
+.language-toggle:hover,
+.language-toggle[aria-expanded="true"] {
+  background: var(--jade-light);
+}
+
+.language-list {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 10;
+  min-width: 140px;
+  margin-top: 6px;
+  padding: 4px;
+  list-style: none;
+  background: var(--white);
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+}
+
+.lang {
+  display: block;
+  width: 100%;
+  padding: 10px 12px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--ink);
+  font-size: 0.95rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.lang:hover {
+  background: var(--jade-light);
+}
+
+.lang.active {
+  background: var(--jade);
+  color: var(--white);
+}
+
+#languageNote {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+#textAssistanceToggle {
+  padding: 12px 16px;
+  margin: 12px 0;
+  border: 2px solid var(--jade);
+  border-radius: 8px;
+  background: var(--white);
+  color: var(--jade);
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#textAssistanceToggle.active {
+  background: var(--jade);
+  color: var(--white);
+}
+
+.assistance-message {
+  padding: 16px;
+  margin: 12px 0;
+  border: 2px solid var(--jade);
+  border-radius: 10px;
+  background: var(--jade-light);
+  color: var(--ink);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.assistance-message[hidden] {
+  display: none;
+}
+
+#highContrastToggle {
+    padding: 12px 16px;
+    margin: 12px 0;
+    border: 2px solid var(--jade);
+    border-radius: 8px;
+    background: var(--white);
+    color: var(--jade);
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#highContrastToggle.active {
+    background: var(--jade);
+    color: var(--white);
+}
+
+body.high-contrast {
+    --jade: #ffeb00;
+    --jade-dark: #000000;
+    --jade-hover: #ffeb00;
+    --jade-light: #000000;
+    --ink: #ffffff;
+    --muted: #ffffff;
+    --page: #000000;
+    --white: #000000;
+    --border: #ffffff;
+    --border-strong: #ffffff;
+
+    background: #000000;
+    color: #ffffff;
+}
+
+.high-contrast .kiosk,
+.high-contrast .screen,
+.high-contrast .menu-content,
+.high-contrast .page,
+.high-contrast .categories {
+    background: #000000;
+    color: #ffffff;
+}
+
+.high-contrast .brand-mark {
+    display: none;
+}
+
+.high-contrast .brand,
+.high-contrast .brand small,
+.high-contrast .brand large,
+.high-contrast .menu-heading {
+    color: #ffffff;
+}
+
+.high-contrast .category {
+    color: #ffffff;
+    border: 1px solid #ffffff;
+}
+
+.high-contrast .category.active,
+.high-contrast .category:hover {
+    background: #ffeb00;
+    color: #000000;
+}
+
+.high-contrast .item,
+.high-contrast .addon-option,
+.high-contrast .cart-item {
+    background: #000000;
+    color: #ffffff;
+    border: 2px solid #ffffff;
+}
+
+.high-contrast .item:hover,
+.high-contrast .item:focus-visible {
+    background: #ffeb00;
+    color: #000000;
+}
+
+.high-contrast .page h1,
+.high-contrast .page h2,
+.high-contrast .page p,
+.high-contrast .page-total,
+.high-contrast .cart-text,
+.high-contrast .cart-bar span {
+    color: #ffffff;
+}
+
+.high-contrast .weather-panel {
+    background: #000000;
+    border: 2px solid #ffffff;
+}
+
+.high-contrast .weather-panel h1,
+.high-contrast .weather-panel a,
+.high-contrast .weather-panel p {
+    color: #ffffff;
+}
+
+.high-contrast button.primary,
+.high-contrast button.secondary,
+.high-contrast button.remove,
+.high-contrast .qty-button,
+.high-contrast .hub-button,
+.high-contrast #addonBack {
+    background: #ffeb00;
+    color: #000000;
+    border: 2px solid #ffffff;
+}
+
+.high-contrast button.primary:hover,
+.high-contrast button.secondary:hover,
+.high-contrast button.remove:hover,
+.high-contrast .qty-button:hover,
+.high-contrast #addonBack:hover {
+    background: #ffffff;
+    color: #000000;
+}
+
+.high-contrast .cart-bar {
+    background: #000000;
+    color: #ffffff;
+    border-top: 2px solid #ffffff;
+}
+
+.high-contrast .language-toggle,
+.high-contrast .language-list {
+    background: #000000;
+    color: #ffffff;
+    border: 2px solid #ffffff;
+}
+
+.high-contrast .lang {
+    color: #ffffff;
+}
+
+.high-contrast .lang.active,
+.high-contrast .lang:hover {
+    background: #ffeb00;
+    color: #000000;
+}
+
+.high-contrast .assistance-message {
+    background: #000000;
+    color: #ffffff;
+    border: 2px solid #ffeb00;
+}
+
+.high-contrast #textAssistanceToggle,
+.high-contrast #highContrastToggle {
+    background: #000000;
+    color: #ffffff;
+    border: 2px solid #ffffff;
+}
+
+.high-contrast #textAssistanceToggle.active,
+.high-contrast #highContrastToggle.active {
+    background: #ffeb00;
+    color: #000000;
+}
+
+.high-contrast button:focus-visible,
+.high-contrast a:focus-visible,
+.high-contrast .item:focus-visible {
+    outline: 3px solid #ffeb00;
+    outline-offset: 3px;
+}
+
+.high-contrast {
+    font-size: 125%;
+}
+
+.high-contrast button {
+    min-height: 48px;
+}

@@ -8,11 +8,9 @@ DROP TABLE IF EXISTS Inventory;
 DROP TABLE IF EXISTS Employee;
 
 CREATE TABLE Employee (EmployeeID INT PRIMARY KEY, FirstName VARCHAR(50), LastName VARCHAR(50), Position VARCHAR(50));
-CREATE TABLE Inventory (IngredientID INT PRIMARY KEY, IngredientName VARCHAR(100), Category VARCHAR(50), Quantity INT, Unit VARCHAR(20));
-CREATE TABLE MenuItem (MenuItemID INT PRIMARY KEY, Category VARCHAR(50), MenuItemName VARCHAR(100), IngredientList VARCHAR(255), Price DECIMAL(10,2));
+CREATE TABLE Inventory (IngredientID INT PRIMARY KEY, IngredientName VARCHAR(100), Category VARCHAR(50), Quantity NUMERIC(14,3), Unit VARCHAR(20));CREATE TABLE MenuItem (MenuItemID INT PRIMARY KEY, Category VARCHAR(50), MenuItemName VARCHAR(100), IngredientList VARCHAR(255), Price DECIMAL(10,2));
 CREATE TABLE AddOn (AddOnsID INT PRIMARY KEY, IngredientID INT, Name VARCHAR(100), Price DECIMAL(10,2));
-CREATE TABLE Recipe (MenuItemID INT, InventoryID INT, InventoryItem VARCHAR(100), AmountUsed DECIMAL(10,2), Unit VARCHAR(20), UsageType VARCHAR(50));
-CREATE TABLE OrderHistory (OrderID INT PRIMARY KEY, EmployeeID INT REFERENCES Employee(EmployeeID), CustomerName VARCHAR(100), Total DECIMAL(12,2) NOT NULL, Date DATE, Time TIME);
+CREATE TABLE Recipe (MenuItemID INT, InventoryID INT, InventoryItem VARCHAR(100), AmountUsed NUMERIC(12,3), Unit VARCHAR(20), UsageType VARCHAR(50));CREATE TABLE OrderHistory (OrderID INT PRIMARY KEY, EmployeeID INT REFERENCES Employee(EmployeeID), CustomerName VARCHAR(100), Total DECIMAL(12,2) NOT NULL, Date DATE, Time TIME);
 CREATE TABLE OrderItems (ItemID INT PRIMARY KEY, OrderID INT NOT NULL REFERENCES OrderHistory(OrderID), MenuID INT NOT NULL REFERENCES MenuItem(MenuItemID));
 CREATE TABLE OrderItemAddOns (OrderItemID INT NOT NULL REFERENCES OrderItems(ItemID), AddOnID INT NOT NULL REFERENCES AddOn(AddOnsID), PRIMARY KEY (OrderItemID, AddOnID));
 

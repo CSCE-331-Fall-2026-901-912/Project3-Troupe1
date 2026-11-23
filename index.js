@@ -8,6 +8,7 @@ const port = process.env.PORT || 3000;
 
 const managerRoutes = require('./server/managerServer.js');
 const kioskRoutes = require('./server/kioskServer.js');
+const cashierRoutes = require('./server/cashierServer.js');
 
 app.use(express.json());
 
@@ -23,6 +24,7 @@ app.get('/', (req, res) => {
 
 app.use('/api/manager', managerRoutes);
 app.use('/api/kiosk', kioskRoutes);
+app.use('/api/cashier', cashierRoutes);
 
 app.listen(port, '0.0.0.0', () => {
     console.log(`Server running on port ${port}`);

@@ -1,0 +1,3 @@
+DELETE FROM MenuItem
+WHERE MenuItemID = $1
+RETURNING *;

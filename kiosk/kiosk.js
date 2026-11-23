@@ -1,42 +1,5 @@
-const menuItems = [
-  { id: 1, name: "Classic Milk Tea", category: "Milk Tea", price: 5.25 },
-  { id: 2, name: "Taro Milk Tea", category: "Milk Tea", price: 5.75 },
-  { id: 3, name: "Matcha Milk Tea", category: "Milk Tea", price: 6.00 },
-  { id: 4, name: "Brown Sugar Milk Tea", category: "Milk Tea", price: 6.25 },
-  { id: 5, name: "Thai Milk Tea", category: "Milk Tea", price: 5.50 },
-  { id: 6, name: "Oolong Milk Tea", category: "Milk Tea", price: 5.50 },
-  { id: 7, name: "Jasmine Milk Tea", category: "Milk Tea", price: 5.50 },
-  { id: 8, name: "Chocolate Milk Tea", category: "Milk Tea", price: 5.75 },
-  { id: 9, name: "Mango Green Tea", category: "Fruit Tea", price: 5.75 },
-  { id: 10, name: "Strawberry Green Tea", category: "Fruit Tea", price: 5.75 },
-  { id: 11, name: "Passion Fruit Green Tea", category: "Fruit Tea", price: 5.75 },
-  { id: 12, name: "Peach Green Tea", category: "Fruit Tea", price: 5.50 },
-  { id: 13, name: "Lychee Green Tea", category: "Fruit Tea", price: 5.75 },
-  { id: 14, name: "Mango Milk Tea", category: "Milk Tea", price: 6.00 },
-  { id: 15, name: "Strawberry Milk Tea", category: "Milk Tea", price: 6.00 },
-  { id: 16, name: "Coconut Milk Tea", category: "Milk Tea", price: 6.75 },
-  { id: 17, name: "Brown Sugar Boba Coffee", category: "Coffee", price: 6.25 },
-  { id: 18, name: "Yuanyang Coffee Milk Tea", category: "Coffee", price: 5.75 },
-  { id: 19, name: "Thai Tea Coffee", category: "Coffee", price: 6.25 },
-  { id: 20, name: "Coconut Mocha With Grass Jelly", category: "Coffee", price: 6.50 },
-  { id: 21, name: "Mango Passion Fruit Smoothie", category: "Smoothie", price: 6.50 },
-  { id: 22, name: "Strawberry Banana Smoothie", category: "Smoothie", price: 6.50 },
-  { id: 23, name: "Peach Lychee Smoothie", category: "Smoothie", price: 6.25 },
-  { id: 24, name: "Taro Coconut Smoothie", category: "Smoothie", price: 6.50 },
-  { id: 25, name: "Pumpkin spice latte", category: "Seasonal Drink", price: 6.50 },
-  { id: 26, name: "Pepermint Shake", category: "Seasonal Drink", price: 6.00 }
-];
-
-const addOns = [
-  { id: 1, name: "Tapioca Pearls", price: 0.75 },
-  { id: 2, name: "Mango Popping Boba", price: 0.75 },
-  { id: 3, name: "Strawberry Popping Boba", price: 0.75 },
-  { id: 4, name: "Lychee Jelly", price: 0.65 },
-  { id: 5, name: "Grass Jelly", price: 0.65 },
-  { id: 6, name: "Aloe Vera", price: 0.75 },
-  { id: 7, name: "Pudding", price: 0.65 },
-  { id: 8, name: "Red Bean", price: 0.75 }
-];
+let menuItems = [];
+let addOns = [];
 
 const screens = {
   menu: document.getElementById("menuScreen"),
@@ -53,11 +16,66 @@ let currentCategory = "Milk Tea";
 let selectedDrink = null;
 let cart = [];
 let favoriteItems = [];
+let translations = {};
+let weatherState = "loading";
+let textAssistanceMode = false;
+let highContrastMode = false;
+
+const categoryLabels = { Seasonal: "Seasonal Drink" };
+const assistanceMessages = {
+  menu: "Step 1: Select a drink category, then choose your preferred drink from the menu.",
+  addon: "Step 2: Choose any additional toppings. Check the total price before adding your drink to the cart.",
+  cart: "Step 3: Review your drinks, quantities, and total price. Select Checkout when you are ready.",
+  confirm: "Your order has been received. Please keep your order number and use it to identify your order at the pickup counter."
+};
+
+function t(text) {
+  return translations[text] || text;
+}
+
+function esc(text) {
+  return String(text).replace(/[&<>"']/g, char => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  })[char]);
+}
+
+function applyLanguage() {
+  document.querySelectorAll("[data-i18n]").forEach(element => {
+    element.textContent = t(element.dataset.i18n);
+  });
+}
+
+async function setLanguage(lang) {
+  const note = document.getElementById("languageNote");
+  let loaded = {};
+  note.textContent = "";
+
+  if (lang !== "en") {
+    try {
+      const response = await fetch("/api/kiosk/translations?lang=" + lang);
+      if (!response.ok) throw new Error("Request failed");
+      loaded = (await response.json()).translations;
+    } catch (error) {
+      note.textContent = "Translation unavailable";
+      lang = "en";
+    }
+  }
+
+  translations = loaded;
+  document.documentElement.lang = lang;
+  document.querySelectorAll(".lang").forEach(button => {
+    button.classList.toggle("active", button.dataset.lang === lang);
+  });
+  applyLanguage();
+  showCategory(currentCategory);
+  renderWeatherRecommendations(weatherState);
+}
 
 function showScreen(name) {
   Object.keys(screens).forEach(key => {
     screens[key].style.display = key === name ? "flex" : "none";
   });
+  updateAssistanceMessage(name);
 }
 
 function cartTotal() {
@@ -66,13 +84,13 @@ function cartTotal() {
 
 function updateCartBar() {
   const count = cart.reduce((sum, item) => sum + item.qty, 0);
-  document.getElementById("cartCount").textContent = "Cart (" + count + ")";
+  document.getElementById("cartCount").textContent = t("Cart") + " (" + count + ")";
   document.getElementById("cartBarTotal").textContent = "$" + cartTotal().toFixed(2);
 }
 
 function showCategory(category) {
   currentCategory = category;
-  document.getElementById("categoryHeading").textContent = category;
+  document.getElementById("categoryHeading").textContent = t(categoryLabels[category] || category);
   drinkGrid.innerHTML = "";
 
   categoryButtons.forEach(button => {
@@ -84,14 +102,14 @@ function showCategory(category) {
     : menuItems.filter(item => item.category === category);
 
   if (category === "Favorites" && visibleItems.length === 0) {
-    drinkGrid.innerHTML = "<p>Favorites are unavailable right now.</p>";
+    drinkGrid.innerHTML = "<p>" + t("Favorites are unavailable right now.") + "</p>";
   }
 
   visibleItems
     .forEach(item => {
       const drink = document.createElement("button");
       drink.className = "item";
-      drink.innerHTML = `<img src="../images/${item.id}.png" alt="${item.name}"><strong>${item.name}</strong><span>$${item.price.toFixed(2)}</span>`;
+      drink.innerHTML = `<img src="../images/${item.id}.png" alt="${esc(t(item.name))}" onerror="this.remove()"><strong>${esc(t(item.name))}</strong><span>$${item.price.toFixed(2)}</span>`;
       drink.addEventListener("click", () => showAddOns(item));
       drinkGrid.appendChild(drink);
     });
@@ -102,19 +120,14 @@ function showCategory(category) {
 
 function showAddOns(item) {
   selectedDrink = item;
-  document.getElementById("drinkName").textContent = item.name;
-  document.getElementById("basePrice").textContent = "Base Price: $" + item.price.toFixed(2);
+  document.getElementById("drinkName").textContent = t(item.name);
+  document.getElementById("basePrice").textContent = t("Base Price") + ": $" + item.price.toFixed(2);
   addonList.innerHTML = "";
 
-  let available = addOns;
-  if (item.id >= 25) {
-    available = [];
-  } else if (item.id === 20) {
-    available = addOns.filter(addOn => addOn.name !== "Grass Jelly");
-  }
+  const available = addOns.filter(addOn => addOn.menuItemIds.includes(item.id));
 
   if (available.length === 0) {
-    addonList.innerHTML = "<p>No optional add-ons for this drink.</p>";
+    addonList.innerHTML = "<p>" + t("No optional add-ons for this drink.") + "</p>";
   }
 
   available.forEach(addOn => {
@@ -122,7 +135,7 @@ function showAddOns(item) {
     label.className = "addon-option";
     label.innerHTML = `
       <input type="checkbox" value="${addOn.id}">
-      <span>${addOn.name}</span>
+      <span>${esc(t(addOn.name))}</span>
       <span>+$${addOn.price.toFixed(2)}</span>
     `;
     label.querySelector("input").addEventListener("change", updateCustomTotal);
@@ -141,14 +154,14 @@ function getSelectedAddOns() {
 
 function updateCustomTotal() {
   const total = getSelectedAddOns().reduce((sum, addOn) => sum + addOn.price, selectedDrink.price);
-  document.getElementById("customTotal").textContent = "Total: $" + total.toFixed(2);
+  document.getElementById("customTotal").textContent = t("Total") + ": $" + total.toFixed(2);
 }
 
 function showCart() {
   cartList.innerHTML = "";
 
   if (cart.length === 0) {
-    cartList.innerHTML = "<p>Your cart is empty.</p>";
+    cartList.innerHTML = "<p>" + t("Your cart is empty.") + "</p>";
   }
 
   cart.forEach((item, index) => {
@@ -156,10 +169,10 @@ function showCart() {
     row.className = "cart-item";
     row.innerHTML = `
       <div>
-        <img src="../images/${item.id}.png" alt="${item.name}">
+        <img src="../images/${item.id}.png" alt="${esc(t(item.name))}">
         <div class="cart-text">
-          <strong>${item.name}</strong>
-          <small>${item.addOns.length ? item.addOns.join(", ") : "No add-ons"}</small>
+          <strong>${esc(t(item.name))}</strong>
+          <small>${item.addOns.length ? esc(item.addOns.map(t).join(", ")) : t("No add-ons")}</small>
         </div>
       </div>
       <div class="qty">
@@ -168,7 +181,7 @@ function showCart() {
         <button class="qty-button plus">+</button>
       </div>
       <span>$${(item.total * item.qty).toFixed(2)}</span>
-      <button class="remove">Remove</button>
+      <button class="remove">${t("Remove")}</button>
     `;
     row.querySelector(".minus").addEventListener("click", () => {
       item.qty--;
@@ -186,9 +199,31 @@ function showCart() {
     cartList.appendChild(row);
   });
 
-  document.getElementById("cartTotal").textContent = "Total: $" + cartTotal().toFixed(2);
+  document.getElementById("cartTotal").textContent = t("Total") + ": $" + cartTotal().toFixed(2);
   updateCartBar();
   showScreen("cart");
+}
+
+async function loadMenu() {
+  try {
+    const response = await fetch("/api/kiosk/menu");
+    if (!response.ok) throw new Error("Request failed");
+    const data = await response.json();
+    menuItems = data.menuItems;
+    addOns = data.addOns;
+  } catch (error) {
+    menuItems = [];
+    addOns = [];
+  }
+}
+
+async function startKiosk() {
+  await loadMenu();
+  showCategory(currentCategory);
+  if (menuItems.length === 0) {
+    drinkGrid.innerHTML = "<p>" + t("The menu is unavailable right now.") + "</p>";
+  }
+  initializeWeather();
 }
 
 async function loadFavorites() {
@@ -230,12 +265,12 @@ document.getElementById("checkoutButton").addEventListener("click", async () => 
   const message = document.getElementById("checkoutMessage");
 
   if (cart.length === 0) {
-    message.textContent = "Your cart is empty.";
+    message.textContent = t("Your cart is empty.");
     return;
   }
 
   button.disabled = true;
-  message.textContent = "Placing your order...";
+  message.textContent = t("Placing your order...");
 
   try {
     const response = await fetch("/api/kiosk/orders", {
@@ -245,28 +280,85 @@ document.getElementById("checkoutButton").addEventListener("click", async () => 
         items: cart.map(item => ({ id: item.id, qty: item.qty, addOnIds: item.addOnIds }))
       })
     });
-    if (!response.ok) throw new Error("Request failed");
     const order = await response.json();
+    if (!response.ok) {
+      message.textContent = response.status === 409
+        ? t("Sorry, some ingredients for your order are sold out.")
+        : t("We couldn't place your order. Please try again.");
+      return;
+    }
 
     cart = [];
     message.textContent = "";
     document.getElementById("confirmMessage").textContent =
-      "Order #" + order.orderId + " was placed. Total: $" + Number(order.total).toFixed(2);
+      t("Order number") + ": " + order.orderId + ". " + t("Total") + ": $" + Number(order.total).toFixed(2);
     updateCartBar();
     showScreen("confirm");
   } catch (error) {
-    message.textContent = "We couldn't place your order. Please try again.";
+    message.textContent = t("We couldn't place your order. Please try again.");
   } finally {
     button.disabled = false;
   }
+});
+
+document.getElementById("textAssistanceToggle").addEventListener("click", () => {
+    textAssistanceMode = !textAssistanceMode;
+
+    const button = document.getElementById("textAssistanceToggle");
+
+    button.textContent = textAssistanceMode
+        ? "Text Assistance: ON"
+        : "Text Assistance: OFF";
+
+    button.classList.toggle("active", textAssistanceMode);
+    button.setAttribute("aria-pressed", String(textAssistanceMode));
+
+    updateAssistanceMessage("menu");
+});
+
+document.getElementById("highContrastToggle").addEventListener("click", () => {
+    highContrastMode = !highContrastMode;
+
+    const button = document.getElementById("highContrastToggle");
+
+    button.textContent = highContrastMode
+        ? "High Contrast: ON"
+        : "High Contrast: OFF";
+
+    button.classList.toggle("active", highContrastMode);
+    button.setAttribute("aria-pressed", String(highContrastMode));
+
+    document.body.classList.toggle("high-contrast", highContrastMode);
 });
 
 document.getElementById("newOrder").addEventListener("click", () => showCategory(currentCategory));
 document.getElementById("addonBack").addEventListener("click", () => showCategory(currentCategory));
 document.getElementById("keepShopping").addEventListener("click", () => showCategory(currentCategory));
 document.getElementById("cartLink").addEventListener("click", showCart);
+const languageToggle = document.getElementById("languageToggle");
+const languageList = document.getElementById("languageList");
 
-showCategory(currentCategory);
+function setLanguageMenu(open) {
+  languageList.hidden = !open;
+  languageToggle.setAttribute("aria-expanded", String(open));
+}
+
+languageToggle.addEventListener("click", event => {
+  event.stopPropagation();
+  setLanguageMenu(languageList.hidden);
+});
+
+document.addEventListener("click", () => setLanguageMenu(false));
+document.addEventListener("keydown", event => {
+  if (event.key === "Escape") setLanguageMenu(false);
+});
+
+document.querySelectorAll(".lang").forEach(button => {
+  button.addEventListener("click", () => {
+    setLanguageMenu(false);
+    setLanguage(button.dataset.lang);
+  });
+});
 
 
 // Fixed store location: replace these coordinates if the store moves.
@@ -287,18 +379,18 @@ function validWeather(value) {
 }
 
 function weatherDescription(code) {
-  if (code === 0) return "Clear";
-  if ([1, 2, 3].includes(code)) return "Partly cloudy / cloudy";
-  if ([45, 48].includes(code)) return "Foggy";
-  if ([51, 53, 55, 56, 57].includes(code)) return "Drizzle";
-  if ([61, 63, 65, 66, 67, 80, 81, 82].includes(code)) return "Rain";
-  if ([71, 73, 75, 77, 85, 86].includes(code)) return "Snow";
-  if ([95, 96, 99].includes(code)) return "Thunderstorms";
-  return "Current conditions";
+  if (code === 0) return t("Clear");
+  if ([1, 2, 3].includes(code)) return t("Partly cloudy / cloudy");
+  if ([45, 48].includes(code)) return t("Foggy");
+  if ([51, 53, 55, 56, 57].includes(code)) return t("Drizzle");
+  if ([61, 63, 65, 66, 67, 80, 81, 82].includes(code)) return t("Rain");
+  if ([71, 73, 75, 77, 85, 86].includes(code)) return t("Snow");
+  if ([95, 96, 99].includes(code)) return t("Thunderstorms");
+  return t("Current conditions");
 }
 
 function recommendationIds(weather) {
-  if (!weather) return [1, 4, 12];
+  if (!weather || weather === "loading") return [1, 4, 12];
   // Temperature takes priority; these are menu suggestions, not hot-drink options.
   if (weather.apparent_temperature >= 80) return [9, 11, 21];
   if (weather.apparent_temperature < 60) return [2, 4, 8];
@@ -310,18 +402,21 @@ function recommendationIds(weather) {
 function renderWeatherRecommendations(weather) {
   const status = document.getElementById("weatherStatus");
   const picks = document.getElementById("weatherPicks");
-  if (weather) {
+  weatherState = weather;
+  if (weather === "loading") {
+    status.textContent = t("Checking College Station weather…");
+  } else if (weather) {
     const message = weather.apparent_temperature >= 80
-      ? "Cool off with a fruity favorite."
+      ? t("Cool off with a fruity favorite.")
       : weather.apparent_temperature < 60
-        ? "Enjoy a rich milk tea today."
-        : "Find your next favorite boba.";
-    status.textContent = "College Station · " +
-      Math.round(weather.temperature_2m) + "°F · Feels like " +
+        ? t("Enjoy a rich milk tea today.")
+        : t("Find your next favorite boba.");
+    status.textContent = t("College Station") + " · " +
+      Math.round(weather.temperature_2m) + "°F · " + t("Feels like") + " " +
       Math.round(weather.apparent_temperature) + "°F · " +
       weatherDescription(weather.weather_code) + ". " + message;
   } else {
-    status.textContent = "Weather unavailable — try one of these favorites.";
+    status.textContent = t("Weather unavailable — try one of these favorites.");
   }
   picks.replaceChildren();
   recommendationIds(weather).forEach(id => {
@@ -331,7 +426,7 @@ function renderWeatherRecommendations(weather) {
     button.type = "button";
     button.className = "item";
     const name = document.createElement("strong");
-    name.textContent = item.name;
+    name.textContent = t(item.name);
     const price = document.createElement("span");
     price.textContent = "$" + item.price.toFixed(2);
     button.append(name, price);
@@ -342,9 +437,7 @@ function renderWeatherRecommendations(weather) {
 
 async function initializeWeather() {
   // Keep picks usable while the request runs.
-  renderWeatherRecommendations(null);
-  document.getElementById("weatherStatus").textContent =
-    "Checking College Station weather…";
+  renderWeatherRecommendations("loading");
   try {
     const cached = JSON.parse(localStorage.getItem(weatherCacheKey));
     const age = cached && Date.now() - cached.savedAt;
@@ -385,5 +478,21 @@ async function initializeWeather() {
   }
 }
 
+function updateAssistanceMessage(screenName) {
+  const messages = {
+    menu: document.getElementById("menuAssistance"),
+    addon: document.getElementById("addonAssistance"),
+    cart: document.getElementById("cartAssistance"),
+    confirm: document.getElementById("confirmAssistance")
+  };
+
+  Object.keys(messages).forEach(key => {
+    messages[key].hidden = !textAssistanceMode || key !== screenName;
+    if (textAssistanceMode && key === screenName) {
+      messages[key].textContent = assistanceMessages[key];
+    }
+  });
+}
+
 // Fetch once per page load; keep recommendations stable while a customer orders.
-initializeWeather();
+startKiosk();
