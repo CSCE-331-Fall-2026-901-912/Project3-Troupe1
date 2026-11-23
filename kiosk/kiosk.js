@@ -19,6 +19,7 @@ let favoriteItems = [];
 let translations = {};
 let weatherState = "loading";
 let textAssistanceMode = false;
+let highContrastMode = false;
 
 const categoryLabels = { Seasonal: "Seasonal Drink" };
 const assistanceMessages = {
@@ -313,6 +314,21 @@ document.getElementById("textAssistanceToggle").addEventListener("click", () => 
     button.setAttribute("aria-pressed", String(textAssistanceMode));
 
     updateAssistanceMessage("menu");
+});
+
+document.getElementById("highContrastToggle").addEventListener("click", () => {
+    highContrastMode = !highContrastMode;
+
+    const button = document.getElementById("highContrastToggle");
+
+    button.textContent = highContrastMode
+        ? "High Contrast: ON"
+        : "High Contrast: OFF";
+
+    button.classList.toggle("active", highContrastMode);
+    button.setAttribute("aria-pressed", String(highContrastMode));
+
+    document.body.classList.toggle("high-contrast", highContrastMode);
 });
 
 document.getElementById("newOrder").addEventListener("click", () => showCategory(currentCategory));
